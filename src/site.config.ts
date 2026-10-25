@@ -18,8 +18,8 @@ export const SITE = {
   profile: {
     headline: 'I find vulnerabilities in web apps and AI systems, and write up how.',
     focus: ['Web and API security', 'AI and LLM security', 'Penetration testing', 'OSINT'],
-    platforms: ['HackerOne', 'Yandex Bug Bounty', 'HackTheBox'],
-    certifications: ['eJPT', 'eCPPT', 'OSCP (in progress)'],
+    platforms: ['HackerOne', 'Yandex Bug Bounty', 'Hack The Box', 'TryHackMe'],
+    certifications: ['MCRTA', 'eJPT', 'ISO 27001 Lead Auditor (course)', 'OSCP (in progress)'],
   },
 };
 
