@@ -20,6 +20,7 @@
   --step-2: 1.75rem;
   --step-3: clamp(2rem, 4.5vw, 2.75rem);
   --step-4: clamp(2.25rem, 6.5vw, 4rem);
+  --step-title: clamp(1.75rem, 4.4vw, 2.875rem);
 
   --measure: 40rem;
   --shell: 68rem;
@@ -278,12 +279,12 @@ p {
 }
 
 .featured__title {
-  font-size: var(--step-4);
-  font-weight: 800;
-  font-stretch: 118%;
-  letter-spacing: -0.02em;
-  line-height: 1.02;
-  max-width: 22ch;
+  font-size: var(--step-title);
+  font-weight: 780;
+  font-stretch: 112%;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  max-width: 28ch;
   margin-bottom: 1.25rem;
 }
 
@@ -524,13 +525,13 @@ p {
 
 .page-title,
 .post__title {
-  font-size: var(--step-4);
-  font-weight: 800;
-  font-stretch: 118%;
-  letter-spacing: -0.02em;
-  line-height: 1.04;
+  font-size: var(--step-title);
+  font-weight: 780;
+  font-stretch: 112%;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
   margin-bottom: 1rem;
-  max-width: 22ch;
+  max-width: 28ch;
 }
 
 .post__head {
