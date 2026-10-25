@@ -10,6 +10,7 @@ export const SITE = {
     github: 'https://github.com/umid1988',
     hackerone: '',
     linkedin: 'https://www.linkedin.com/in/umid-norbekov-b13806385/',
+    medium: 'https://medium.com/@umidnorbekov',
     x: '',
     email: '',
   },
