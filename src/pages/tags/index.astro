@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getAllPosts, tagSlug, tagUrl } from '../../lib/posts';
+
+const posts = await getAllPosts();
+const counts = new Map<string, { name: string; count: number }>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    const slug = tagSlug(tag);
+    const entry = counts.get(slug) ?? { name: tag, count: 0 };
+    entry.count += 1;
+    counts.set(slug, entry);
+  }
+}
+const tags = [...counts.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+---
+
+<Base title="Tags" description="Every topic covered on the blog.">
+  <header class="page-head">
+    <h1 class="page-title">Tags</h1>
+    <p class="lede">Every topic covered across writeups, notes and news.</p>
+  </header>
+  {
+    tags.length === 0 ? (
+      <p class="empty">No tags yet. Add them to a post's front matter.</p>
+    ) : (
+      <ul class="tag-index">
+        {tags.map((t) => (
+          <li>
+            <a href={tagUrl(t.name)}>{t.name}</a>
+            <span class="tag-index__count">{t.count}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Base>

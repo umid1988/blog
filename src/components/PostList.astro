@@ -1,0 +1,48 @@
+---
+import Severity from './Severity.astro';
+import { formatDate, isoDate, postUrl, type Post } from '../lib/posts';
+import { SECTIONS } from '../site.config';
+
+interface Props {
+  posts: Post[];
+  empty?: string;
+  showSection?: boolean;
+  showDescription?: boolean;
+}
+const { posts, empty = 'Nothing here yet.', showSection = false, showDescription = true } =
+  Astro.props;
+---
+
+{
+  posts.length === 0 ? (
+    <p class="empty">{empty}</p>
+  ) : (
+    <ul class="post-list">
+      {posts.map((post) => {
+        const d = post.data as Record<string, any>;
+        return (
+          <li class="post-row">
+            <time class="post-row__date" datetime={isoDate(d.date)}>
+              {formatDate(d.date)}
+            </time>
+            <div class="post-row__main">
+              <a class="post-row__title" href={postUrl(post)}>
+                {d.title}
+              </a>
+              {d.draft && <span class="draft-flag">Draft</span>}
+              {showDescription && <p class="post-row__desc">{d.description}</p>}
+              {showSection && (
+                <p class="post-row__section">{SECTIONS[post.collection].singular}</p>
+              )}
+            </div>
+            {post.collection === 'writeups' && d.severity && (
+              <div class="post-row__meta">
+                <Severity level={d.severity} compact />
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  )
+}

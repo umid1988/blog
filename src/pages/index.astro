@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import RecordBlock from '../components/RecordBlock.astro';
+import { getPosts, postUrl } from '../lib/posts';
+import { SITE, SECTIONS } from '../site.config';
+import { url } from '../lib/url';
+
+const writeups = await getPosts('writeups');
+const notes = await getPosts('notes');
+const news = await getPosts('news');
+
+const [featured, ...moreWriteups] = writeups;
+---
+
+<Base>
+  <section class="intro">
+    <p>{SITE.description}</p>
+  </section>
+
+  {
+    featured && (
+      <section class="featured" aria-labelledby="featured-title">
+        <p class="featured__kicker">Latest writeup</p>
+        <h1 id="featured-title" class="featured__title">
+          <a href={postUrl(featured)}>{featured.data.title}</a>
+        </h1>
+        <p class="lede">{featured.data.description}</p>
+        <RecordBlock post={featured} />
+      </section>
+    )
+  }
+
+  <section class="home-section" aria-labelledby="writeups-heading">
+    <div class="home-section__head">
+      <h2 id="writeups-heading">{featured ? 'More writeups' : SECTIONS.writeups.name}</h2>
+      <a href={url('writeups/')}>All writeups</a>
+    </div>
+    <PostList
+      posts={(featured ? moreWriteups : writeups).slice(0, 5)}
+      empty={featured ? 'This is the only writeup so far.' : SECTIONS.writeups.empty}
+    />
+  </section>
+
+  <div class="home-columns">
+    <section class="home-section" aria-labelledby="notes-heading">
+      <div class="home-section__head">
+        <h2 id="notes-heading">{SECTIONS.notes.name}</h2>
+        <a href={url('notes/')}>All notes</a>
+      </div>
+      <PostList posts={notes.slice(0, 5)} empty={SECTIONS.notes.empty} showDescription={false} />
+    </section>
+
+    <section class="home-section" aria-labelledby="news-heading">
+      <div class="home-section__head">
+        <h2 id="news-heading">{SECTIONS.news.name}</h2>
+        <a href={url('news/')}>All news</a>
+      </div>
+      <PostList posts={news.slice(0, 5)} empty={SECTIONS.news.empty} showDescription={false} />
+    </section>
+  </div>
+</Base>

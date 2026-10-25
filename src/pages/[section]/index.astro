@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+import { SECTIONS, SECTION_KEYS, type SectionKey } from '../../site.config';
+
+export function getStaticPaths() {
+  return SECTION_KEYS.map((section) => ({ params: { section } }));
+}
+
+const section = Astro.params.section as SectionKey;
+const info = SECTIONS[section];
+const posts = await getPosts(section);
+---
+
+<Base title={info.name} description={info.blurb} current={section}>
+  <header class="page-head">
+    <h1 class="page-title">{info.name}</h1>
+    <p class="lede">{info.blurb}</p>
+  </header>
+  <PostList posts={posts} empty={info.empty} />
+</Base>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  level: 'critical' | 'high' | 'medium' | 'low' | 'info';
+  compact?: boolean;
+}
+const { level, compact = false } = Astro.props;
+const filled = { info: 0, low: 1, medium: 2, high: 3, critical: 4 }[level];
+const label = level.charAt(0).toUpperCase() + level.slice(1);
+---
+
+<span class:list={['sev', `sev--${level}`, { 'sev--compact': compact }]}>
+  <span class="sev__bars" aria-hidden="true">
+    {[1, 2, 3, 4].map((n) => <i class:list={{ on: n <= filled }} />)}
+  </span>
+  <span class="sev__label">{compact ? <span class="visually-hidden">Severity: </span> : null}{label}</span>
+</span>

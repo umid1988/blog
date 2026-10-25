@@ -1,0 +1,93 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import RecordBlock from '../../components/RecordBlock.astro';
+import { getPosts, postUrl, type Post } from '../../lib/posts';
+import { SECTIONS, SECTION_KEYS, type SectionKey } from '../../site.config';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const section of SECTION_KEYS) {
+    const posts = await getPosts(section);
+    posts.forEach((post, i) => {
+      paths.push({
+        params: { section, slug: post.id },
+        props: { post, newer: posts[i - 1], older: posts[i + 1] },
+      });
+    });
+  }
+  return paths;
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const section = post.collection as SectionKey;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+  published={post.data.date}
+  current={section}
+>
+  <article class="post">
+    <header class="post__head">
+      <p class="post__section">
+        <a href={url(`${section}/`)}>{SECTIONS[section].name}</a>
+        {post.data.draft && <span class="draft-flag">Draft</span>}
+      </p>
+      <h1 class="post__title">{post.data.title}</h1>
+      <p class="lede">{post.data.description}</p>
+      <RecordBlock post={post} />
+    </header>
+
+    {
+      toc.length >= 3 && (
+        <details class="toc">
+          <summary>Contents</summary>
+          <ol>
+            {toc.map((h) => (
+              <li>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      (newer || older) && (
+        <nav class="post-nav" aria-label={`More ${SECTIONS[section].name.toLowerCase()}`}>
+          {older ? (
+            <a class="post-nav__link" href={postUrl(older)} rel="prev">
+              <span class="post-nav__dir">Older</span>
+              <span class="post-nav__title">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a class="post-nav__link post-nav__link--newer" href={postUrl(newer)} rel="next">
+              <span class="post-nav__dir">Newer</span>
+              <span class="post-nav__title">{newer.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>

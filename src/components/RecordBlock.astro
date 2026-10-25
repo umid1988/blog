@@ -1,0 +1,92 @@
+---
+// The ruled metadata panel under every post title, modelled on the
+// title block of an engineering drawing.
+import Severity from './Severity.astro';
+import { formatDate, isoDate, tagUrl, readingMinutes, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const d = post.data as Record<string, any>;
+const minutes = readingMinutes(post.body);
+const isWriteup = post.collection === 'writeups';
+---
+
+<dl class="record">
+  <div>
+    <dt>Published</dt>
+    <dd><time datetime={isoDate(d.date)}>{formatDate(d.date)}</time></dd>
+  </div>
+  {
+    d.updated && (
+      <div>
+        <dt>Updated</dt>
+        <dd><time datetime={isoDate(d.updated)}>{formatDate(d.updated)}</time></dd>
+      </div>
+    )
+  }
+  {isWriteup && d.platform && (<div><dt>Platform</dt><dd>{d.platform}</dd></div>)}
+  {isWriteup && d.program && (<div><dt>Program</dt><dd>{d.program}</dd></div>)}
+  {
+    isWriteup && d.target && (
+      <div class:list={{ record__wide: d.target.length > 14 }}>
+        <dt>Target</dt>
+        <dd class="record__wrap">{d.target}</dd>
+      </div>
+    )
+  }
+  {
+    isWriteup && d.severity && (
+      <div>
+        <dt>Severity</dt>
+        <dd><Severity level={d.severity} /></dd>
+      </div>
+    )
+  }
+  {isWriteup && d.status && (<div><dt>Status</dt><dd>{d.status}</dd></div>)}
+  {isWriteup && d.cve && (<div><dt>CVE</dt><dd>{d.cve}</dd></div>)}
+  {isWriteup && d.cwe && (<div><dt>CWE</dt><dd>{d.cwe}</dd></div>)}
+  {
+    isWriteup && d.reported && (
+      <div>
+        <dt>Reported</dt>
+        <dd><time datetime={isoDate(d.reported)}>{formatDate(d.reported)}</time></dd>
+      </div>
+    )
+  }
+  {
+    isWriteup && d.disclosed && (
+      <div>
+        <dt>Disclosed</dt>
+        <dd><time datetime={isoDate(d.disclosed)}>{formatDate(d.disclosed)}</time></dd>
+      </div>
+    )
+  }
+  {
+    d.source && (
+      <div>
+        <dt>Source</dt>
+        <dd><a href={d.source}>{new URL(d.source).hostname.replace(/^www\./, '')}</a></dd>
+      </div>
+    )
+  }
+  <div>
+    <dt>Reading time</dt>
+    <dd>{minutes} min</dd>
+  </div>
+  {
+    d.tags.length > 0 && (
+      <div class="record__tags">
+        <dt>Tags</dt>
+        <dd>
+          <ul class="tag-list">
+            {d.tags.map((tag: string) => (
+              <li><a href={tagUrl(tag)}>{tag}</a></li>
+            ))}
+          </ul>
+        </dd>
+      </div>
+    )
+  }
+</dl>

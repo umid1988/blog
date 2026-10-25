@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/url';
+---
+
+<Base title="Page not found">
+  <header class="page-head">
+    <h1 class="page-title">Page not found</h1>
+    <p class="lede">
+      This address doesn't match any page. It may have moved, or the link may have a typo.
+    </p>
+  </header>
+  <p>
+    Go to the <a href={url('/')}>home page</a>, or browse
+    <a href={url('writeups/')}>writeups</a>, <a href={url('notes/')}>notes</a> and
+    <a href={url('news/')}>news</a>.
+  </p>
+</Base>
