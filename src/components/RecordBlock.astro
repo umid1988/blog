@@ -78,7 +78,7 @@ const isWriteup = post.collection === 'writeups';
   {
     d.source && (
       <div>
-        <dt>Source</dt>
+        <dt>{post.collection === 'news' ? 'Source' : 'First published on'}</dt>
         <dd><a href={d.source}>{new URL(d.source).hostname.replace(/^www\./, '')}</a></dd>
       </div>
     )

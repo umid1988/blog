@@ -690,6 +690,65 @@ p {
   overflow-wrap: anywhere;
 }
 
+/* Diagrams drawn as inline SVG inside posts */
+
+.prose figure {
+  margin-inline: 0;
+}
+
+.prose figcaption {
+  margin-top: 0.6rem;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 40rem;
+}
+
+.diagram .d-box {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.diagram .d-box--ext {
+  fill: var(--wash);
+  stroke-dasharray: 5 4;
+}
+
+.diagram .d-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.diagram .d-arrow {
+  fill: var(--ink);
+}
+
+.diagram text {
+  font-family: var(--font-sans);
+  fill: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.diagram .d-label {
+  fill: var(--ink-soft);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.diagram .d-alert {
+  fill: var(--redline);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
 /* Code blocks */
 
 .prose pre,

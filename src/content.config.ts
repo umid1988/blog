@@ -33,7 +33,10 @@ const writeups = defineCollection({
 
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
-  schema: base,
+  schema: base.extend({
+    // Where the note was first published, e.g. a LinkedIn article.
+    source: z.string().url().optional(),
+  }),
 });
 
 const news = defineCollection({
