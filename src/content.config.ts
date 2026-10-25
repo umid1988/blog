@@ -21,6 +21,9 @@ const writeups = defineCollection({
     target: z.string().optional(), // affected asset, e.g. api.example.com
     severity: z.enum(['critical', 'high', 'medium', 'low', 'info']).optional(),
     status: z.string().optional(), // Resolved, Disclosed, Duplicate, ...
+    cvss: z.string().optional(), // score, e.g. "7.3"
+    cvssVector: z.string().optional(), // e.g. AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N
+    report: z.string().optional(), // report ID from the program
     cve: z.string().optional(),
     cwe: z.string().optional(),
     reported: z.coerce.date().optional(),

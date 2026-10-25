@@ -28,7 +28,7 @@ draft: false   # true bo'lsa, faqat lokal ko'rinadi, saytga chiqmaydi
 ---
 ```
 
-Writeup'larda qo'shimcha maydonlar bor: `platform`, `program`, `target`, `severity` (`critical`, `high`, `medium`, `low`, `info`), `status`, `cve`, `cwe`, `reported`, `disclosed`. To'liq namuna: `src/content/writeups/writeup-template.md`. Shu faylni nusxalab, nomini o'zgartirib, to'ldirasiz.
+Writeup'larda qo'shimcha maydonlar bor: `platform`, `program`, `target`, `severity` (`critical`, `high`, `medium`, `low`, `info`), `cvss`, `cvssVector`, `status`, `report`, `cve`, `cwe`, `reported`, `disclosed`. To'liq namuna: `src/content/writeups/writeup-template.md`. Shu faylni nusxalab, nomini o'zgartirib, to'ldirasiz.
 
 News postlarida ixtiyoriy `source` maydoni bor (asl manbaga havola).
 
