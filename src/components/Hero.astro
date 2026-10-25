@@ -1,0 +1,52 @@
+---
+// Introduction at the top of the home page. Content lives in site.config.ts.
+import { SITE } from '../site.config';
+
+const { profile, links } = SITE;
+const elsewhere = [
+  { label: 'GitHub', href: links.github },
+  { label: 'HackerOne', href: links.hackerone },
+  { label: 'LinkedIn', href: links.linkedin },
+  { label: 'X', href: links.x },
+].filter((l) => l.href);
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__text">
+    <h1 id="hero-title" class="hero__title">{profile.headline}</h1>
+    <p class="hero__sub">{SITE.description}</p>
+  </div>
+
+  <dl class="record hero__record">
+    <div class="record__wide">
+      <dt>Focus</dt>
+      <dd><ul class="inline-list inline-list--marked">{profile.focus.map((item) => <li>{item}</li>)}</ul></dd>
+    </div>
+    <div>
+      <dt>Platforms</dt>
+      <dd><ul class="stack-list">{profile.platforms.map((item) => <li>{item}</li>)}</ul></dd>
+    </div>
+    <div>
+      <dt>Certifications</dt>
+      <dd><ul class="stack-list">{profile.certifications.map((item) => <li>{item}</li>)}</ul></dd>
+    </div>
+    {
+      elsewhere.length > 0 && (
+        <div class="record__wide">
+          <dt>Elsewhere</dt>
+          <dd>
+            <ul class="inline-list">
+              {elsewhere.map((l) => (
+                <li>
+                  <a href={l.href} rel="me">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</section>

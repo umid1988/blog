@@ -9,9 +9,16 @@ export const SITE = {
   links: {
     github: 'https://github.com/umid1988',
     hackerone: '',
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/in/umid-norbekov-b13806385/',
     x: '',
     email: '',
+  },
+  // The introduction block at the top of the home page.
+  profile: {
+    headline: 'I find vulnerabilities in web apps and AI systems, and write up how.',
+    focus: ['Web and API security', 'AI and LLM security', 'Penetration testing', 'OSINT'],
+    platforms: ['HackerOne', 'Yandex Bug Bounty', 'HackTheBox'],
+    certifications: ['eJPT', 'eCPPT', 'OSCP (in progress)'],
   },
 };
 

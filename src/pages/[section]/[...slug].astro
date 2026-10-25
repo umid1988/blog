@@ -30,6 +30,7 @@ const { post, newer, older } = Astro.props;
 const section = post.collection as SectionKey;
 const { Content, headings } = await render(post);
 const toc = headings.filter((h) => h.depth === 2);
+const hasToc = toc.length >= 3;
 ---
 
 <Base
@@ -38,6 +39,7 @@ const toc = headings.filter((h) => h.depth === 2);
   type="article"
   published={post.data.date}
   current={section}
+  image={`og/${post.collection}/${post.id}.png`}
 >
   <article class="post">
     <header class="post__head">
@@ -50,44 +52,65 @@ const toc = headings.filter((h) => h.depth === 2);
       <RecordBlock post={post} />
     </header>
 
-    {
-      toc.length >= 3 && (
-        <details class="toc">
-          <summary>Contents</summary>
-          <ol>
-            {toc.map((h) => (
-              <li>
-                <a href={`#${h.slug}`}>{h.text}</a>
-              </li>
-            ))}
-          </ol>
-        </details>
-      )
-    }
+    <div class:list={['post__body', { 'post__body--aside': hasToc }]}>
+      <div class="post__main">
+        {
+          hasToc && (
+            <details class="toc">
+              <summary>Contents</summary>
+              <ol>
+                {toc.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )
+        }
 
-    <div class="prose">
-      <Content />
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          (newer || older) && (
+            <nav class="post-nav" aria-label={`More ${SECTIONS[section].name.toLowerCase()}`}>
+              {older ? (
+                <a class="post-nav__link" href={postUrl(older)} rel="prev">
+                  <span class="post-nav__dir">Older</span>
+                  <span class="post-nav__title">{older.data.title}</span>
+                </a>
+              ) : (
+                <span />
+              )}
+              {newer && (
+                <a class="post-nav__link post-nav__link--newer" href={postUrl(newer)} rel="next">
+                  <span class="post-nav__dir">Newer</span>
+                  <span class="post-nav__title">{newer.data.title}</span>
+                </a>
+              )}
+            </nav>
+          )
+        }
+      </div>
+
+      {
+        hasToc && (
+          <aside class="toc-side" aria-labelledby="toc-side-title">
+            <p class="toc-side__title" id="toc-side-title">Contents</p>
+            <ol>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`} data-toc-link>
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )
+      }
     </div>
-
-    {
-      (newer || older) && (
-        <nav class="post-nav" aria-label={`More ${SECTIONS[section].name.toLowerCase()}`}>
-          {older ? (
-            <a class="post-nav__link" href={postUrl(older)} rel="prev">
-              <span class="post-nav__dir">Older</span>
-              <span class="post-nav__title">{older.data.title}</span>
-            </a>
-          ) : (
-            <span />
-          )}
-          {newer && (
-            <a class="post-nav__link post-nav__link--newer" href={postUrl(newer)} rel="next">
-              <span class="post-nav__dir">Newer</span>
-              <span class="post-nav__title">{newer.data.title}</span>
-            </a>
-          )}
-        </nav>
-      )
-    }
   </article>
 </Base>

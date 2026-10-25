@@ -259,11 +259,65 @@ p {
 
 /* Home */
 
-.intro p {
+.hero {
+  display: grid;
+  gap: 2rem 3.5rem;
+  align-items: end;
+  padding-bottom: 0.5rem;
+}
+
+@media (min-width: 58rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 24rem;
+  }
+}
+
+.hero__title {
+  font-size: clamp(2rem, 4.8vw, 3.125rem);
+  font-weight: 780;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  max-width: 20ch;
+}
+
+.hero__sub {
+  margin-top: 1.1rem;
   font-size: var(--step-1);
   line-height: 1.5;
-  max-width: 34rem;
+  max-width: 32rem;
   color: var(--ink-soft);
+}
+
+.hero__record dd {
+  font-weight: 600;
+}
+
+.inline-list,
+.stack-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 1rem;
+}
+
+.inline-list--marked li::before {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-right: 0.45rem;
+  vertical-align: 0.12em;
+  background: var(--ink-soft);
+}
+
+.stack-list li + li {
+  margin-top: 0.1rem;
 }
 
 .featured {
@@ -279,7 +333,7 @@ p {
 }
 
 .featured__title {
-  font-size: var(--step-title);
+  font-size: clamp(1.625rem, 3.6vw, 2.375rem);
   font-weight: 780;
   font-stretch: 112%;
   letter-spacing: -0.015em;
@@ -573,6 +627,72 @@ p {
   margin-top: 0.2rem;
 }
 
+/* Side contents list on wide screens */
+
+.toc-side {
+  display: none;
+}
+
+@media (min-width: 72rem) {
+  .post__body--aside {
+    display: grid;
+    grid-template-columns: 46rem 14rem;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .post__body--aside .toc {
+    display: none;
+  }
+
+  /* Keep wide screenshots clear of the side column. */
+  .post__body--aside .prose > p:has(> img:only-child),
+  .post__body--aside .prose > p:has(> .zoom:only-child) {
+    width: 46rem;
+  }
+
+  .toc-side {
+    display: block;
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    font-size: var(--step--1);
+    line-height: 1.4;
+  }
+
+  .toc-side__title {
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .toc-side ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--rule);
+  }
+
+  .toc-side a {
+    display: block;
+    padding: 0.3rem 0 0.3rem 0.9rem;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .toc-side a:hover {
+    color: var(--ink);
+  }
+
+  .toc-side a[aria-current='true'] {
+    color: var(--ink);
+    font-weight: 600;
+    border-left-color: var(--ink);
+  }
+}
+
 /* Long-form content */
 
 .prose {
@@ -648,13 +768,119 @@ p {
 }
 
 /* Screenshots break out of the text column so they stay readable. */
-.prose > p:has(> img:only-child) {
+.prose > p:has(> img:only-child),
+.prose > p:has(> .zoom:only-child) {
   width: min(56rem, calc(100vw - 2 * var(--gutter)));
 }
 
-.prose > p:has(> img:only-child) img {
+.prose > p:has(> img:only-child) img,
+.prose > p:has(> .zoom:only-child) img {
   width: 100%;
   height: auto;
+}
+
+/* Image zoom */
+
+.zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.lightbox {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: 96vw;
+  max-height: 96vh;
+  overflow: visible;
+}
+
+.lightbox::backdrop {
+  background: rgb(6 20 36 / 0.88);
+}
+
+.lightbox[open] {
+  animation: lightbox-in 140ms ease-out;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+.lightbox img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: 88vh;
+  border: 1px solid #2e5479;
+  cursor: zoom-out;
+}
+
+.lightbox__close {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.5rem);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: #edf2f5;
+  background: transparent;
+  border: 1px solid #a9bed1;
+  border-radius: 3px;
+  padding: 0.15rem 0.7rem;
+  cursor: pointer;
+}
+
+.lightbox__close:focus-visible {
+  outline: 2px solid #edf2f5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox[open] {
+    animation: none;
+  }
+}
+
+/* On phones, show screenshots at double width and let them scroll sideways. */
+@media (max-width: 40rem) {
+  .lightbox {
+    margin: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    overflow: auto;
+    display: none;
+    align-items: center;
+  }
+
+  .lightbox[open] {
+    display: flex;
+  }
+
+  .lightbox img {
+    max-width: none;
+    max-height: none;
+    width: 200vw;
+    border: 0;
+  }
+
+  .lightbox__close {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    bottom: auto;
+    background: #10314f;
+    z-index: 1;
+  }
 }
 
 .prose table {
@@ -760,9 +986,16 @@ p {
   position: relative;
 }
 
-.codeblock pre {
+.prose .codeblock pre {
   margin: 0;
   padding-top: 2.4rem;
+}
+
+/* Plain-text blocks (prompts, logs) wrap instead of scrolling sideways. */
+.prose pre[data-language='text'],
+.prose pre[data-language='plaintext'] {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .prose pre {

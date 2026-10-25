@@ -51,6 +51,9 @@ npm run build    # tayyor sayt dist/ papkasiga
 ## Sozlamalar
 
 - Sayt nomi, tavsifi va ijtimoiy tarmoq havolalari: `src/site.config.ts`
+- Bosh sahifadagi tanishtiruv (sarlavha, yo'nalishlar, platformalar, sertifikatlar): `src/site.config.ts` ichidagi `profile`
+- Ulashish uchun preview rasmlar har bir post uchun build vaqtida avtomatik yaratiladi (`src/lib/og.ts`), alohida hech narsa qilish shart emas
+- Kod bloklari ranglari: `src/lib/shiki-themes.mjs`
 - "About" sahifasi: `src/pages/about.md`
 - Ranglar va shriftlar: `src/styles/global.css` (boshidagi `:root` qismi)
 

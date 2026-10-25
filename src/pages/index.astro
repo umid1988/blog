@@ -2,8 +2,9 @@
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import RecordBlock from '../components/RecordBlock.astro';
+import Hero from '../components/Hero.astro';
 import { getPosts, postUrl } from '../lib/posts';
-import { SITE, SECTIONS } from '../site.config';
+import { SECTIONS } from '../site.config';
 import { url } from '../lib/url';
 
 const writeups = await getPosts('writeups');
@@ -14,17 +15,15 @@ const [featured, ...moreWriteups] = writeups;
 ---
 
 <Base>
-  <section class="intro">
-    <p>{SITE.description}</p>
-  </section>
+  <Hero />
 
   {
     featured && (
       <section class="featured" aria-labelledby="featured-title">
         <p class="featured__kicker">Latest writeup</p>
-        <h1 id="featured-title" class="featured__title">
+        <h2 id="featured-title" class="featured__title">
           <a href={postUrl(featured)}>{featured.data.title}</a>
-        </h1>
+        </h2>
         <p class="lede">{featured.data.description}</p>
         <RecordBlock post={featured} />
       </section>

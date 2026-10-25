@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { cyanotypeLight, cyanotypeDark } from './src/lib/shiki-themes.mjs';
 
 // The GitHub Actions workflow passes SITE_URL and BASE_PATH from
 // actions/configure-pages, so a custom domain set in the repo's Pages
@@ -20,7 +21,7 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark-dimmed' },
+      themes: { light: cyanotypeLight, dark: cyanotypeDark },
       wrap: false,
     },
   },
