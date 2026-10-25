@@ -48,11 +48,53 @@ AI agentiga bitta buyruq beriladi: *"FinTechCorp texnik xodimlarini top va oxirg
 
 ### 2-bosqich: AI tahlili va profil tuzish
 
-Yigʻilgan maʼlumotlar LLMʼga uzatiladi va u Sardorning profilini tuzadi:
+1-bosqichda yigʻilgan narsa hali tarqoq, "xom" maʼlumot: bir nechta post, commit va izoh. Bu bosqichning vazifasi — oʻsha tarqoq maʼlumotni **tuzilgan psixologik profilga** aylantirish. Aynan shu qadam oddiy razvedkani hujumga aylantiradi.
 
-- **Ogʻriqli nuqta (urgency):** hozir Kubernetes + ArgoCD muammosi ustida bosh qotirmoqda.
-- **Ishonch omili (trust):** bevosita rahbari — Javlon.
-- **Til va uslub:** rasmiy emas, IT-mutaxassislari ishlatadigan texnik terminlarga boy uslub.
+Zamonaviy AI agentlari buni **toolʼlar (masalan, MCP serverlar)** orqali qiladi: har bir manbadan (LinkedIn, GitHub, Telegram) maʼlumot alohida tool bilan tortiladi, bitta kontekstga jamlanadi va tahlil uchun LLMʼga uzatiladi. LLM esa har bir detaldan aniq xulosa chiqaradi.
+
+<figure class="diagram">
+<svg viewBox="0 0 740 128" role="img" aria-label="Uchta manbadan (LinkedIn, GitHub, Telegram) kelgan maʼlumot LLM tahlilidan oʻtib, bitta nishon kartasiga aylanadi">
+<defs><marker id="pf4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<g font-size="11" font-weight="600" text-anchor="middle">
+<rect class="d-box" x="8" y="8" width="118" height="28" rx="3"/><text x="67" y="26">LinkedIn</text>
+<rect class="d-box" x="8" y="50" width="118" height="28" rx="3"/><text x="67" y="68">GitHub</text>
+<rect class="d-box" x="8" y="92" width="118" height="28" rx="3"/><text x="67" y="110">Telegram / forum</text>
+<rect class="d-box" x="300" y="46" width="140" height="40" rx="3"/><text x="370" y="63">LLM tahlili</text><text class="d-label" x="370" y="77">xulosa chiqaradi</text>
+<rect class="d-box d-box--ext" x="580" y="46" width="152" height="40" rx="3" style="stroke:var(--redline)"/><text x="656" y="63" style="fill:var(--redline)">Nishon kartasi</text><text class="d-label" x="656" y="77">tuzilgan profil</text>
+<g class="d-line" marker-end="url(#pf4)">
+<line x1="126" y1="22" x2="298" y2="58"/><line x1="126" y1="64" x2="298" y2="66"/><line x1="126" y1="106" x2="298" y2="74"/>
+<line x1="440" y1="66" x2="578" y2="66"/>
+</g>
+<text class="d-label" x="213" y="120">3 tarqoq manba</text>
+<text class="d-label" x="510" y="60">bitta profil →</text>
+</g>
+</svg>
+<figcaption>Tarqoq ochiq maʼlumot LLM tahlilidan oʻtib, hujum uchun tayyor "nishon kartasi"ga aylanadi.</figcaption>
+</figure>
+
+**Xom maʼlumot qanday xulosaga aylanadi:**
+
+| Agent nimani koʻrdi (kirish) | LLM qanday xulosa chiqardi (chiqish) |
+| --- | --- |
+| GitHub: kecha `terraform-aws-eks` muammosida crashloop | **Ogʻriqli nuqta** — hoziroq hal qilmoqchi boʻlgan dolzarb masala → shoshilinchlik vositasi |
+| LinkedIn: postga **Javlon (Team Lead)** izoh yozgan | **Ishonch nuqtasi** — bevosita rahbar → yuboruvchi sifatida ishonchli ism |
+| Telegram: `prod'da podlar crashloop beryapti` | **Til namunasi** — yarim rasmiy, aralash texnik sleng → xabar aynan shu uslubda yoziladi |
+| LinkedIn: *Senior DevOps Engineer*, AWS/EKS steki | **Nishon qiymati** — bulut kalitlariga kirish → sessiya tokeni asosiy maqsad |
+
+Natijada LLM strukturalangan **"nishon kartasi"** chiqaradi — 3-bosqichdagi xabar generatsiyasi uchun tayyor "retsept":
+
+```json
+{
+  "nishon": "Sardor — Senior DevOps Engineer",
+  "hozirgi_muammo": "ArgoCD + EKS crashloop",
+  "ishonchli_yuboruvchi": "Javlon (Team Lead)",
+  "uslub": "yarim rasmiy, texnik sleng",
+  "tanlangan_tuzoq": "hotfix loglari havolasi",
+  "bahona_deadline": "16:00 sprint-review"
+}
+```
+
+Diqqat qiling: hujumchi bu yerda hech narsa **oʻylab topmaydi** — kartadagi har bir maydon nishonning oʻz ochiq maʼlumotlaridan olingan. Aynan shuning uchun keyingi bosqichdagi xabar shunchalik ishonarli chiqadi.
 
 ### 3-bosqich: Gipershaxsiy xabarni generatsiya qilish
 
