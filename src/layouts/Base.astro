@@ -13,6 +13,8 @@ interface Props {
   current?: string;
   // Preview image for link sharing, relative to the site root.
   image?: string;
+  // Language of the page content, when it differs from the site's.
+  lang?: string;
 }
 
 const {
@@ -22,6 +24,7 @@ const {
   published,
   current,
   image = 'og/default.png',
+  lang = SITE.lang,
 } = Astro.props;
 const imageUrl = new URL(url(image), Astro.site);
 
@@ -48,7 +51,7 @@ const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

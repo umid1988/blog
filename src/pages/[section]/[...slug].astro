@@ -5,6 +5,7 @@ import RecordBlock from '../../components/RecordBlock.astro';
 import { getPosts, postUrl, type Post } from '../../lib/posts';
 import { SECTIONS, SECTION_KEYS, type SectionKey } from '../../site.config';
 import { url } from '../../lib/url';
+import { labels } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -31,6 +32,7 @@ const section = post.collection as SectionKey;
 const { Content, headings } = await render(post);
 const toc = headings.filter((h) => h.depth === 2);
 const hasToc = toc.length >= 3;
+const L = labels(post.data.lang);
 ---
 
 <Base
@@ -40,6 +42,7 @@ const hasToc = toc.length >= 3;
   published={post.data.date}
   current={section}
   image={`og/${post.collection}/${post.id}.png`}
+  lang={post.data.lang}
 >
   <article class="post">
     <header class="post__head">
@@ -57,7 +60,7 @@ const hasToc = toc.length >= 3;
         {
           hasToc && (
             <details class="toc">
-              <summary>Contents</summary>
+              <summary>{L.contents}</summary>
               <ol>
                 {toc.map((h) => (
                   <li>
@@ -78,7 +81,7 @@ const hasToc = toc.length >= 3;
             <nav class="post-nav" aria-label={`More ${SECTIONS[section].name.toLowerCase()}`}>
               {older ? (
                 <a class="post-nav__link" href={postUrl(older)} rel="prev">
-                  <span class="post-nav__dir">Older</span>
+                  <span class="post-nav__dir">{L.older}</span>
                   <span class="post-nav__title">{older.data.title}</span>
                 </a>
               ) : (
@@ -86,7 +89,7 @@ const hasToc = toc.length >= 3;
               )}
               {newer && (
                 <a class="post-nav__link post-nav__link--newer" href={postUrl(newer)} rel="next">
-                  <span class="post-nav__dir">Newer</span>
+                  <span class="post-nav__dir">{L.newer}</span>
                   <span class="post-nav__title">{newer.data.title}</span>
                 </a>
               )}
@@ -98,7 +101,7 @@ const hasToc = toc.length >= 3;
       {
         hasToc && (
           <aside class="toc-side" aria-labelledby="toc-side-title">
-            <p class="toc-side__title" id="toc-side-title">Contents</p>
+            <p class="toc-side__title" id="toc-side-title">{L.contents}</p>
             <ol>
               {toc.map((h) => (
                 <li>

@@ -11,6 +11,8 @@ const base = z.object({
   tags: z.array(z.string()).default([]),
   // Drafts show up in `npm run dev` but are left out of the published site.
   draft: z.boolean().default(false),
+  // Language of the post if it isn't English, e.g. "uz" or "ru".
+  lang: z.string().optional(),
 });
 
 const writeups = defineCollection({

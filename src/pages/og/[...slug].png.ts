@@ -2,6 +2,7 @@ import type { APIContext } from 'astro';
 import { getAllPosts, formatDate, readingMinutes, type Post } from '../../lib/posts';
 import { renderOg, type OgCell } from '../../lib/og';
 import { SECTIONS, SITE } from '../../site.config';
+import { labels, formatDateFor } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
@@ -13,14 +14,15 @@ export async function getStaticPaths() {
 
 function cellsFor(post: Post): OgCell[] {
   const d = post.data as Record<string, any>;
-  const cells: OgCell[] = [{ label: 'Published', value: formatDate(d.date) }];
+  const L = labels(d.lang);
+  const cells: OgCell[] = [{ label: L.published, value: formatDateFor(d.date, d.lang, formatDate) }];
   if (post.collection === 'writeups') {
     if (d.platform) cells.push({ label: 'Platform', value: d.platform });
     if (d.severity) cells.push({ label: 'Severity', value: d.severity, severity: d.severity });
     if (d.cvss) cells.push({ label: 'CVSS', value: d.cvss });
   } else {
-    if (d.tags?.[0]) cells.push({ label: 'Topic', value: d.tags[0] });
-    cells.push({ label: 'Reading time', value: `${readingMinutes(post.body)} min` });
+    if (d.tags?.[0]) cells.push({ label: L.topic, value: d.tags[0] });
+    cells.push({ label: L.readingTime, value: L.minutes(readingMinutes(post.body)) });
   }
   return cells;
 }
@@ -29,7 +31,10 @@ export async function GET({ props }: APIContext) {
   const post = props.post as Post | undefined;
   const png = post
     ? await renderOg({
-        kicker: SECTIONS[post.collection].singular,
+        kicker:
+          post.collection === 'notes' && post.data.lang
+            ? labels(post.data.lang).note
+            : SECTIONS[post.collection].singular,
         title: post.data.title,
         cells: cellsFor(post),
       })

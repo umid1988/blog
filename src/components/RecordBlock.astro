@@ -3,6 +3,7 @@
 // title block of an engineering drawing.
 import Severity from './Severity.astro';
 import { formatDate, isoDate, tagUrl, readingMinutes, type Post } from '../lib/posts';
+import { labels, formatDateFor } from '../lib/i18n';
 
 interface Props {
   post: Post;
@@ -11,18 +12,20 @@ const { post } = Astro.props;
 const d = post.data as Record<string, any>;
 const minutes = readingMinutes(post.body);
 const isWriteup = post.collection === 'writeups';
+const L = labels(d.lang);
+const fmt = (date: Date) => formatDateFor(date, d.lang, formatDate);
 ---
 
 <dl class="record">
-  <div>
-    <dt>Published</dt>
-    <dd><time datetime={isoDate(d.date)}>{formatDate(d.date)}</time></dd>
+  <div class:list={{ record__wide: fmt(d.date).length > 14 }}>
+    <dt>{L.published}</dt>
+    <dd><time datetime={isoDate(d.date)}>{fmt(d.date)}</time></dd>
   </div>
   {
     d.updated && (
       <div>
-        <dt>Updated</dt>
-        <dd><time datetime={isoDate(d.updated)}>{formatDate(d.updated)}</time></dd>
+        <dt>{L.updated}</dt>
+        <dd><time datetime={isoDate(d.updated)}>{fmt(d.updated)}</time></dd>
       </div>
     )
   }
@@ -78,19 +81,19 @@ const isWriteup = post.collection === 'writeups';
   {
     d.source && (
       <div>
-        <dt>{post.collection === 'news' ? 'Source' : 'First published on'}</dt>
+        <dt>{post.collection === 'news' ? L.source : L.firstPublishedOn}</dt>
         <dd><a href={d.source}>{new URL(d.source).hostname.replace(/^www\./, '')}</a></dd>
       </div>
     )
   }
   <div>
-    <dt>Reading time</dt>
-    <dd>{minutes} min</dd>
+    <dt>{L.readingTime}</dt>
+    <dd>{L.minutes(minutes)}</dd>
   </div>
   {
     d.tags.length > 0 && (
       <div class="record__tags">
-        <dt>Tags</dt>
+        <dt>{L.tags}</dt>
         <dd>
           <ul class="tag-list">
             {d.tags.map((tag: string) => (
