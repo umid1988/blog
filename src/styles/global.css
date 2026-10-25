@@ -10,6 +10,9 @@
   --rule: #c3cfd9;
   --wash: #e4eaee;
   --redline: #c1121f;
+  --accent-blue: #1d5aa6;
+  --accent-green: #1f6b4e;
+  --accent-amber: #8a5a00;
 
   --font-sans: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono: 'Martian Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -35,6 +38,9 @@
     --rule: #2e5479;
     --wash: #0b2742;
     --redline: #ff7a7a;
+    --accent-blue: #8ec5ff;
+    --accent-green: #6cc29b;
+    --accent-amber: #e0b057;
   }
 }
 
@@ -914,6 +920,125 @@ p {
   padding: 0.12em 0.35em;
   border-radius: 3px;
   overflow-wrap: anywhere;
+}
+
+/* Callouts, technique cards and detection/defense boxes (long notes) */
+
+.prose .callout {
+  border-left: 3px solid var(--ink);
+  background: var(--wash);
+  padding: 0.7rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 2px 2px 0;
+}
+
+.prose .callout > :last-child {
+  margin-bottom: 0;
+}
+
+.callout__h {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.callout--info {
+  border-left-color: var(--accent-blue);
+}
+
+.callout--warn {
+  border-left-color: var(--accent-amber);
+}
+
+.callout--warn .callout__h {
+  color: var(--accent-amber);
+}
+
+.callout--danger {
+  border-left-color: var(--redline);
+}
+
+.callout--danger .callout__h {
+  color: var(--redline);
+}
+
+.prose .tech-card {
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--ink);
+  padding: 1rem 1.1rem 0.5rem;
+  margin: 1.6rem 0;
+}
+
+.prose .tech-card > :last-child {
+  margin-bottom: 0;
+}
+
+.tech-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.tech-card__name {
+  font-weight: 700;
+  font-size: var(--step-1);
+}
+
+.tech-card__att {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-stretch: 87%;
+  color: var(--ink-soft);
+}
+
+.dd {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+
+@media (min-width: 40rem) {
+  .dd {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.dd__det,
+.dd__def {
+  padding: 0.55rem 0.8rem;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  border-left: 3px solid;
+  background: var(--wash);
+}
+
+.dd__det {
+  border-left-color: var(--accent-green);
+}
+
+.dd__def {
+  border-left-color: var(--accent-blue);
+}
+
+.dd__det b {
+  color: var(--accent-green);
+}
+
+.dd__def b {
+  color: var(--accent-blue);
+}
+
+.dd p,
+.callout p {
+  margin: 0;
+}
+
+/* SVG diagrams in these notes use the same tokens as the diagramming CSS below. */
+.diagram svg text {
+  font-family: var(--font-sans);
 }
 
 /* Diagrams drawn as inline SVG inside posts */
