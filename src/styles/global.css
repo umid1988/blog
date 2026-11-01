@@ -361,6 +361,21 @@ p {
   margin-top: 1.75rem;
 }
 
+/* auto-fit lets the few course facts fill the row instead of leaving an empty cell */
+.course .record {
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+}
+
+.course__cta {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.course__cta a {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
 .home-section {
   margin-top: 3.5rem;
 }

@@ -2,7 +2,7 @@
 import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource-variable/martian-mono/wdth.css';
 import '../styles/global.css';
-import { SITE, SECTIONS, SECTION_KEYS } from '../site.config';
+import { SITE, SECTIONS, SECTION_KEYS, COURSE } from '../site.config';
 import { url } from '../lib/url';
 
 interface Props {
@@ -45,6 +45,7 @@ const csp = [
 
 const navItems = [
   ...SECTION_KEYS.map((key) => ({ key, label: SECTIONS[key].name, href: url(`${key}/`) })),
+  ...(COURSE.url ? [{ key: 'course', label: COURSE.navLabel, href: COURSE.url }] : []),
   { key: 'about', label: 'About', href: url('about/') },
 ];
 const year = new Date().getFullYear();

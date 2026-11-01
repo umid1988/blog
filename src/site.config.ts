@@ -23,6 +23,26 @@ export const SITE = {
   },
 };
 
+// The free course, linked from the main menu and the home page.
+// It lives in its own repo (umid1988/ai-sec), so the address is absolute
+// and stays the same when the blog moves to a custom domain.
+// Set url to '' to hide it everywhere.
+export const COURSE = {
+  url: 'https://umid1988.github.io/ai-sec/',
+  navLabel: 'Course',
+  kicker: 'Free course · in Uzbek',
+  title: 'AI Red Teaming & LLM Security',
+  description:
+    'Sixteen hands-on lessons, from prompt injection and trust boundaries to RAG, AI agents, MCP and a full AI red team audit.',
+  facts: [
+    { label: 'Lessons', value: '16' },
+    { label: 'Level', value: 'Beginner to advanced' },
+    { label: 'Language', value: 'Uzbek' },
+    { label: 'Includes', value: 'Python labs, quiz' },
+  ],
+  cta: 'Open the course',
+};
+
 // The three sections of the blog. The key is the URL path and the
 // folder name under src/content/.
 export const SECTIONS = {

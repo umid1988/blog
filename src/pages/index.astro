@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import RecordBlock from '../components/RecordBlock.astro';
 import Hero from '../components/Hero.astro';
+import CourseCard from '../components/CourseCard.astro';
 import { getPosts, postUrl } from '../lib/posts';
 import { SECTIONS } from '../site.config';
 import { url } from '../lib/url';
@@ -29,6 +30,8 @@ const [featured, ...moreWriteups] = writeups;
       </section>
     )
   }
+
+  <CourseCard />
 
   <section class="home-section" aria-labelledby="writeups-heading">
     <div class="home-section__head">
