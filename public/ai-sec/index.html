@@ -29,50 +29,75 @@
 @media(max-width:800px){.case-fields,.read-order{grid-template-columns:1fr}.research-note{padding:14px}.filter-controls{display:block}.filter-controls input,.filter-controls select{width:100%;margin:4px 0}}
 @media print{.research-note,.case-study,.resource-entry{break-inside:avoid}.filter-controls{display:none}.upgrade-banner{border:1px solid #777}}
 
-/* ===== Palette: "qog'oz va siyoh" — calm, print-like colours =====
-   Warm paper background, slate ink text, one restrained blue accent.
-   No glows, gradients or neon. Overrides the hard-coded colours above. */
-:root{--bg:#f4f2ed;--paper:#fcfbf8;--ink:#22272b;--muted:#5f6468;--blue:#2b5d7d;--bluep:#e6edf1;--green:#2e6a4f;--greenp:#e7f0ea;--orange:#85571a;--orangep:#f5ecdd;--red:#9e3b33;--redp:#f6e7e4;--stroke:#e2ded5;--code:#24282b;--code-ink:#e8e6e1;--wash:#f7f5f0;--wash2:#efece5;--shadow:0 1px 2px rgba(40,34,24,.05);--radius:10px;--btn:#2b5d7d;--btn-ink:#fff;--btn-hover:#234d68;--hero-bg:#263038;--hero-ink:#f3f1ec;--hero-muted:#c9ccce;--hero-accent:#b9cfdc;--hero-line:rgba(255,255,255,.2)}
-@media(prefers-color-scheme:dark){:root{--bg:#191918;--paper:#212120;--ink:#e6e2da;--muted:#a39e95;--blue:#93b9d1;--bluep:#26313a;--green:#93c4a7;--greenp:#22302a;--orange:#d6b27c;--orangep:#352c20;--red:#e09a90;--redp:#3a2624;--stroke:#34332f;--code:#121211;--wash:#1d1d1c;--wash2:#2a2927;--shadow:none;--btn:#93b9d1;--btn-ink:#14191c;--btn-hover:#a9c8dc;--hero-bg:#252a2d}}
-body{background:var(--bg);color:var(--ink)}
-.sidebar{border-radius:12px;background:var(--paper)}
-.sidebar .sheading{color:var(--muted)}
-.num,.badgelevel{background:var(--wash2);color:var(--muted)}
-.hero{background:var(--hero-bg);border-radius:12px;color:var(--hero-ink)}
+/* ===== Theme: "Hacker" — after the classic GitHub Pages hacker theme =====
+   Near-black page, terminal monospace type, lime headings, dashed rules.
+   Dark in both system modes; prints in black on white. No external assets. */
+:root,:root:not(#x){--bg:#181818;--paper:#181818;--ink:#e6e6e6;--muted:#a3a3a3;--blue:#63c0f5;--bluep:#16232c;--green:#b5e853;--greenp:#1d2414;--orange:#f0c674;--orangep:#29231a;--red:#ff8a80;--redp:#2c1b1a;--stroke:#2f2f2f;--code:#0d0d0d;--code-ink:#e6e6e6;--wash:#1e1e1e;--wash2:#262626;--shadow:none;--radius:8px;--lime:#b5e853;--mono:Monaco,Consolas,"Liberation Mono","DejaVu Sans Mono","Courier New",monospace;--btn:#0b0b0b;--btn-ink:#e6e6e6;--btn-hover:#000;--hero-bg:transparent;--hero-ink:#e6e6e6;--hero-muted:#a3a3a3;--hero-accent:#a3a3a3;--hero-line:#3a3a3a;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:14.5px;line-height:1.75}
+h1,h2,h3,h4,.hero h1{color:var(--lime);font-family:var(--mono);letter-spacing:-.01em}
+a{color:var(--blue)}
+strong,b{color:#fff}
+::selection{background:var(--lime);color:#000}
+/* layout: flat sections separated by dashed rules instead of cards */
+.section,.upgrade-banner{background:transparent;border:0;border-top:1px dashed var(--lime);border-radius:0;box-shadow:none;padding-left:4px;padding-right:4px}
+.sidebar{background:#121212;border:1px solid var(--stroke);border-radius:var(--radius)}
+.brand{color:var(--lime);font-family:var(--mono)}
+.sidebar a{color:var(--muted)}
+.sidebar a:hover,.sidebar a.active{background:var(--wash2);color:var(--lime)}
+.sidebar .sheading{color:#8a8a8a}
+.num,.badgelevel{background:var(--wash2);color:var(--muted);font-family:var(--mono)}
+/* header in the theme's style: "$ " prompt, lime title, dashed underline */
+.hero{background:transparent;border-radius:0;border-bottom:1px dashed var(--lime);box-shadow:none;padding:28px 4px 32px;color:var(--ink)}
 .hero:after{display:none}
-.eyebrow{color:var(--hero-accent)}
-.hero p,.artbox small{color:var(--hero-muted)}
-.hero .meta span{border-color:var(--hero-line);background:transparent}
-.artbox{background:rgba(255,255,255,.04);border-color:var(--hero-line)}
-.arrow{color:var(--hero-muted)}
-.badge{background:var(--bluep);color:var(--blue)}
-.callout,.panel,.diagram,.toc-entry,.research-note .exercise,.case-field,.checklist-extra{background:var(--wash)}
-.callout.warn{border-left-color:var(--orange)}.callout.good{border-left-color:var(--green)}
-th{background:var(--wash2);color:var(--ink)}
-tr:nth-child(even) td{background:var(--wash)}
-code,kbd{background:var(--wash2)}
-pre{background:var(--code);color:var(--code-ink)}
-pre code{background:transparent}
-.dnode{background:var(--bluep);border-color:var(--stroke)}
-.dnode.green{background:var(--greenp);border-color:var(--stroke)}
-.dnode.yellow{background:var(--orangep);border-color:var(--stroke)}
-.darrow{color:var(--muted)}
+.hero h1:before{content:"$ ";color:var(--lime)}
+.hero h1{font-size:clamp(28px,3.6vw,44px)}
+.eyebrow{color:var(--muted)}
+.hero p,.artbox small{color:var(--muted)}
+.hero .meta span{background:#0b0b0b;border:1px solid #2a2a2a;border-radius:10px;color:var(--ink)}
+.artbox{background:#111;border:1px dashed #3a3a3a;border-radius:var(--radius)}
+.artbox strong{color:var(--lime)}
+.arrow{color:var(--lime)}
+/* lists with the theme's ">>" markers (lesson content only) */
+.lesson ul,.section > ul,.research-note ul{list-style:none;padding-left:4px}
+.lesson ul li:before,.section > ul li:before,.research-note ul li:before{content:">> ";color:var(--lime);font-weight:700}
+.section-kicker,.research-note .research-label{color:var(--muted);font-family:var(--mono)}
+.badge{background:transparent;border:1px solid currentColor;color:var(--lime);border-radius:4px}
+.badge.green{color:var(--lime)}.badge.orange{color:var(--orange)}
+.mini-pill,.case-tag,.inline-source-tags .rref{background:#0b0b0b;border-color:#2a2a2a}
+.callout,.panel,.diagram,.toc-entry,.research-note,.research-note .exercise,.case-field,.checklist-extra,.linkitem,.clarification{background:var(--wash);border-color:var(--stroke)}
+.callout.info,.research-note{border-left-color:var(--blue)}.callout.warn{border-left-color:var(--orange)}.callout.good{border-left-color:var(--lime)}
 .panel.bad{background:var(--redp)}.panel.good{background:var(--greenp)}
-.toc-entry:hover{border-color:var(--blue);background:var(--paper)}
+th{background:#111;color:var(--lime)}
+td,th{border-bottom-color:var(--stroke)}
+tr:nth-child(even) td{background:#1c1c1c}
+.tablewrap{border-color:var(--stroke)}
+code,kbd{background:var(--wash2);color:var(--ink);font-family:var(--mono)}
+pre{background:var(--code);color:var(--code-ink);border:1px solid #222}
+pre code{background:transparent}
+.copy{background:#1a1a1a;border-color:#333;color:var(--ink)}
+.copy:hover{background:#262626;border-color:var(--lime)}
+.hero + .upgrade-banner{border-top:0;margin-top:0}
+.dnode{background:#1c1c1c;border:1px dashed #444}
+.dnode.green{background:var(--greenp);border-color:var(--lime)}
+.dnode.yellow{background:var(--orangep);border-color:var(--orange)}
+.darrow{color:var(--lime)}
+.toc-entry .tn,.step>span{background:#0b0b0b;color:var(--lime);border:1px solid #2a2a2a}
+.toc-entry:hover{border-color:var(--lime);background:#1c1c1c}
 .progress{background:var(--wash2)}
-.bar{background:var(--blue)}
-.option:has(input:checked){background:var(--bluep);border-color:var(--blue)}
+.bar{background:var(--lime)}
+.option{border-color:var(--stroke)}
+.option:has(input:checked){background:var(--greenp);border-color:var(--lime)}
+.option input,.checkline input{accent-color:var(--lime)}
 .feedback{background:var(--wash2)}
-.feedback.correct{background:var(--greenp);color:var(--green)}
+.feedback.correct{background:var(--greenp);color:var(--lime)}
 .feedback.incorrect{background:var(--redp);color:var(--red)}
-.button{background:var(--btn);color:var(--btn-ink)}
-.button:hover{background:var(--btn-hover)}
-.button.secondary{background:var(--bluep);color:var(--blue)}
+.button{background:var(--btn);color:var(--btn-ink);border:1px solid #333;border-radius:12px;font-family:var(--mono)}
+.button:hover{background:var(--btn-hover);border-color:var(--lime)}
+.button.secondary{background:#0b0b0b;color:var(--ink)}
 .button:disabled{background:var(--wash2);color:var(--muted)}
-.result{background:var(--bluep)}
-.research-note{border-left-color:var(--blue)}
-.upgrade-banner,.research-note,.section{background:var(--paper)}
-@media print{.hero{background:#263038!important}}
+.result{background:var(--greenp)}
+.filter-controls input,.filter-controls select{background:#111;border-color:var(--stroke);color:var(--ink);font-family:var(--mono)}
+@media print{body{background:#fff!important;color:#000!important;font:10.5pt var(--mono)}h1,h2,h3,h4,.hero h1,strong,b{color:#000!important}.hero{background:#fff!important;color:#000!important;border-bottom:1px dashed #000}.hero p,.eyebrow{color:#333!important}pre{background:#f4f4f4!important;color:#000!important}}
 </style>
 </head>
 <body>
