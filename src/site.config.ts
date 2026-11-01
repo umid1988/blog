@@ -24,11 +24,11 @@ export const SITE = {
 };
 
 // The free course, linked from the main menu and the home page.
-// It lives in its own repo (umid1988/ai-sec), so the address is absolute
-// and stays the same when the blog moves to a custom domain.
-// Set url to '' to hide it everywhere.
+// The page itself is public/ai-sec/index.html (a copy of the umid1988/ai-sec
+// repo), served at <blog>/ai-sec/ and moving with the blog to a custom domain.
+// path is relative to the blog root; set it to '' to hide the course everywhere.
 export const COURSE = {
-  url: 'https://umid1988.github.io/ai-sec/',
+  path: 'ai-sec/',
   navLabel: 'Course',
   kicker: 'Free course · in Uzbek',
   title: 'AI Red Teaming & LLM Security',

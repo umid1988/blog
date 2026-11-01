@@ -1,14 +1,17 @@
 ---
 // Home page block for the free course. Content lives in site.config.ts.
 import { COURSE } from '../site.config';
+import { url } from '../lib/url';
+
+const href = COURSE.path ? url(COURSE.path) : '';
 ---
 
 {
-  COURSE.url && (
+  href && (
     <section class="featured course" aria-labelledby="course-title">
       <p class="featured__kicker">{COURSE.kicker}</p>
       <h2 id="course-title" class="featured__title">
-        <a href={COURSE.url}>{COURSE.title}</a>
+        <a href={href}>{COURSE.title}</a>
       </h2>
       <p class="lede">{COURSE.description}</p>
       <dl class="record">
@@ -20,7 +23,7 @@ import { COURSE } from '../site.config';
         ))}
       </dl>
       <p class="course__cta">
-        <a href={COURSE.url}>{COURSE.cta} <span aria-hidden="true">→</span></a>
+        <a href={href}>{COURSE.cta} <span aria-hidden="true">→</span></a>
       </p>
     </section>
   )

@@ -45,7 +45,7 @@ const csp = [
 
 const navItems = [
   ...SECTION_KEYS.map((key) => ({ key, label: SECTIONS[key].name, href: url(`${key}/`) })),
-  ...(COURSE.url ? [{ key: 'course', label: COURSE.navLabel, href: COURSE.url }] : []),
+  ...(COURSE.path ? [{ key: 'course', label: COURSE.navLabel, href: url(COURSE.path) }] : []),
   { key: 'about', label: 'About', href: url('about/') },
 ];
 const year = new Date().getFullYear();
