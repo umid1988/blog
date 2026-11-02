@@ -420,22 +420,22 @@ sudo atk6-firewall6 eth0 <ipv6-nishon> 80
 >
 > ```yaml
 > # suricata.yaml (parcha)
-defrag:
-  memcap: 64mb
-  timeout: 60
-host-os-policy:
-  windows: [10.0.10.0/24]
-  linux:   [10.0.20.0/24]
-  bsd:     []
-
--- snort.lua (parcha)
-stream_ip =
-{
-    policy = 'linux',       -- himoyalanayotgan hostlarga mos siyosat
-    max_overlaps = 2,       -- ko‘p overlap → alert
-    min_frag_length = 100,  -- juda kichik bo‘lak → alert
-    min_ttl = 3,
-}
+> defrag:
+>   memcap: 64mb
+>   timeout: 60
+> host-os-policy:
+>   windows: [10.0.10.0/24]
+>   linux:   [10.0.20.0/24]
+>   bsd:     []
+>
+> -- snort.lua (parcha)
+> stream_ip =
+> {
+>     policy = 'linux',       -- himoyalanayotgan hostlarga mos siyosat
+>     max_overlaps = 2,       -- ko‘p overlap → alert
+>     min_frag_length = 100,  -- juda kichik bo‘lak → alert
+>     min_ttl = 3,
+> }
 > ```
 >
 > - **Zeek** `weird.log`’da `fragment_overlap`, `excessively_small_fragment` kabi yozuvlarni kuzating.
@@ -652,14 +652,14 @@ Options’ni xom hex ko‘rinishida ham berish mumkin: har bir bayt `\x` va ikki
 >
 > ```bash
 > # Linux
-sysctl -w net.ipv4.conf.all.accept_source_route=0
-sysctl -w net.ipv6.conf.all.accept_source_route=0
-# Cisco IOS
-no ip source-route
-# Windows (registry): HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
-#   DisableIPSourceRouting = 2
-# Snort/Suricata qoidasi
-alert ip any any -> $HOME_NET any (msg:"LOCAL IP option LSRR"; ipopts:lsrr; sid:1000001; rev:1;)
+> sysctl -w net.ipv4.conf.all.accept_source_route=0
+> sysctl -w net.ipv6.conf.all.accept_source_route=0
+> # Cisco IOS
+> no ip source-route
+> # Windows (registry): HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+> #   DisableIPSourceRouting = 2
+> # Snort/Suricata qoidasi
+> alert ip any any -> $HOME_NET any (msg:"LOCAL IP option LSRR"; ipopts:lsrr; sid:1000001; rev:1;)
 > ```
 >
 
@@ -1093,14 +1093,14 @@ Pentest topilmasi faqat «X ishladi» emas. Har bir topilma uchun:
 > ℹ️ **NAMUNA TOPILMA**
 >
 > **Sarlavha:** Perimetr filtri stateless — ACK skan ichki xizmatlarni oshkor qiladi. 
-
-**Dalil:** `nmap -sS` → 445/tcp filtered; `nmap -sA` → 445/tcp unfiltered (14:05, 203.0.113.10 dan). SOC loglarida mos alert yo‘q. 
-
-**Ta’sir:** Filtr ulanish holatini kuzatmaydi; ACK/FIN/NULL skanlari orqali qoidalar xaritalanadi va mayda fragmentlar L4 sarlavhasisiz o‘tishi mumkin. 
-
-**Tavsiya:** Perimetrda stateful qoidalar; `established` ACL o‘rniga conntrack; fragment qayta yig‘ish (4.6); ACK anomaliyasiga IDS qoidasi. 
-
-**Tekshirish:** Tuzatishdan keyin `nmap -sA -p 445` «filtered» berishi va mos alert chiqishi kerak.
+>
+> **Dalil:** `nmap -sS` → 445/tcp filtered; `nmap -sA` → 445/tcp unfiltered (14:05, 203.0.113.10 dan). SOC loglarida mos alert yo‘q. 
+>
+> **Ta’sir:** Filtr ulanish holatini kuzatmaydi; ACK/FIN/NULL skanlari orqali qoidalar xaritalanadi va mayda fragmentlar L4 sarlavhasisiz o‘tishi mumkin. 
+>
+> **Tavsiya:** Perimetrda stateful qoidalar; `established` ACL o‘rniga conntrack; fragment qayta yig‘ish (4.6); ACK anomaliyasiga IDS qoidasi. 
+>
+> **Tekshirish:** Tuzatishdan keyin `nmap -sA -p 445` «filtered» berishi va mos alert chiqishi kerak.
 >
 
 ## 15\. Laboratoriya mashqlari
