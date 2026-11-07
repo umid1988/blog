@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Interaktiv laboratoriya: buzilgan smart kameradan uy noutbukidagi hujjatlargacha boʻlgan hujum zanjiri va uni qaysi himoya qaysi bosqichda uzishi.">
+<title>Smart kameradan hujjatlargacha — interaktiv hujum zanjiri | Zerosec</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1016;--bg2:#141821;--card:#191e29;--card2:#202636;--inner:#10141b;
+  --border:#283041;--border2:#3a4359;
+  --text:#e7eaf1;--text2:#a2a9bd;--text3:#6d7489;
+  --accent:#3f8ee6;--accent2:#62a3ec;--accent-bg:rgba(63,142,230,.13);--accent-bd:rgba(63,142,230,.4);
+  --atk:#f26d6d;--atk-bg:rgba(242,109,109,.12);--atk-bd:rgba(242,109,109,.45);
+  --def:#4cce8d;--def-bg:rgba(76,206,141,.12);--def-bd:rgba(76,206,141,.45);
+  --warn:#f2b447;--warn-bg:rgba(242,180,71,.12);--warn-bd:rgba(242,180,71,.45);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0;font-size:13px;color:var(--text3)}
+.topbar a{color:var(--text2)}
+
+header.hero{padding:28px 0 26px;border-bottom:1px solid var(--border)}
+.badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-bd);margin-bottom:14px}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent2)}
+.hero h1{font-size:clamp(24px,4.4vw,38px);line-height:1.18;letter-spacing:-.5px;font-weight:800;margin-bottom:12px}
+.hero p{color:var(--text2);max-width:720px}
+.legal{margin-top:16px;font-size:13px;color:var(--text3);border-left:3px solid var(--border2);padding-left:12px;max-width:720px}
+
+section{padding:26px 0}
+h2{font-size:20px;letter-spacing:-.2px;margin-bottom:6px}
+.sub{color:var(--text2);font-size:14px;margin-bottom:16px}
+
+/* Defenses */
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.preset{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--text2)}
+.preset:hover{border-color:var(--border2);color:var(--text)}
+.defs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.def{display:flex;gap:11px;align-items:flex-start;text-align:left;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:11px 12px;transition:border-color .15s,background .15s}
+.def:hover{border-color:var(--border2)}
+.def .sw{flex:0 0 34px;height:20px;border-radius:999px;background:var(--border2);position:relative;margin-top:2px;transition:background .15s}
+.def .sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--text2);transition:transform .15s,background .15s}
+.def[aria-pressed="true"]{border-color:var(--def-bd);background:var(--def-bg)}
+.def[aria-pressed="true"] .sw{background:var(--def)}
+.def[aria-pressed="true"] .sw::after{transform:translateX(14px);background:#0d1016}
+.def b{display:block;font-size:14px;font-weight:650}
+.def small{display:block;font-size:12px;color:var(--text3);line-height:1.45;margin-top:2px}
+.def .stg{font-family:var(--mono);font-size:11px;color:var(--text3)}
+
+/* Lab */
+.lab{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.lab-head{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
+.lab-head .t{font-weight:700}
+.lab-head .t small{display:block;font-weight:400;font-size:12px;color:var(--text3)}
+.net{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.chain{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:14px 16px 0}
+.pill{border:1px solid var(--border);border-radius:8px;padding:7px 8px;background:var(--inner);text-align:left;min-width:0}
+.pill .n{font-family:var(--mono);font-size:11px;color:var(--text3);display:flex;justify-content:space-between;gap:4px}
+.pill .l{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill.cur{border-color:var(--accent-bd);box-shadow:0 0 0 1px var(--accent-bd) inset}
+.pill.ok .n i{color:var(--atk)}
+.pill.blocked{border-color:var(--def-bd);background:var(--def-bg)}
+.pill.blocked .n i{color:var(--def)}
+.pill.skip{opacity:.4}
+.pill i{font-style:normal}
+
+.stage-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0}
+.diagram{padding:12px 16px;border-right:1px solid var(--border)}
+svg{display:block;width:100%;height:auto}
+.panel{padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.kicker{font-family:var(--mono);font-size:11.5px;color:var(--text3);letter-spacing:.3px}
+.panel h3{font-size:18px;line-height:1.3}
+.panel p.desc{color:var(--text2);font-size:14px}
+.tech{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--inner);border:1px solid var(--border);color:var(--text2)}
+.log{background:#080a0f;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:12px;line-height:1.7;min-height:110px;overflow-x:auto}
+.log .h{display:flex;justify-content:space-between;color:var(--text3);font-size:11px;letter-spacing:.5px;margin-bottom:4px}
+.log div.ln{white-space:pre;opacity:0;transform:translateY(3px);animation:in .25s forwards}
+.ln.a{color:#f49a9a}.ln.d{color:#7fdcab}.ln.w{color:#f5c76e}.ln.n{color:#9aa6bd}
+@keyframes in{to{opacity:1;transform:none}}
+.verdict{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;border:1px solid var(--border);font-size:13.5px}
+.verdict b{display:block;font-size:14px}
+.verdict.atk{background:var(--atk-bg);border-color:var(--atk-bd)}
+.verdict.def{background:var(--def-bg);border-color:var(--def-bd)}
+.verdict.neu{background:var(--inner)}
+.verdict .ic{font-size:16px;line-height:1.3}
+.blue{font-size:13px;color:var(--text2);border-left:3px solid var(--accent);padding-left:10px}
+.blue b{color:var(--text)}
+.controls{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.btn{border:1px solid var(--border2);background:var(--card);border-radius:9px;padding:8px 14px;font-size:14px;font-weight:600}
+.btn:hover:not(:disabled){background:var(--card2)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:var(--text);color:#0d1016;border-color:var(--text)}
+.btn.primary:hover:not(:disabled){background:#fff}
+.controls .sp{flex:1}
+.hint{font-size:12px;color:var(--text3);align-self:center}
+
+/* SVG */
+.node rect{fill:var(--inner);stroke:var(--border2);stroke-width:1.5;transition:fill .25s,stroke .25s}
+.node .ttl{fill:var(--text);font-size:19px;font-weight:700}
+.node .ip{fill:var(--text3);font-size:13px;font-family:var(--mono)}
+.node .st{font-size:14px;font-weight:600;fill:var(--text2)}
+.node.atk rect{stroke:var(--atk);fill:#24141a}.node.atk .st{fill:var(--atk)}
+.node.def rect{stroke:var(--def);fill:#112219}.node.def .st{fill:var(--def)}
+.node.warn rect{stroke:var(--warn);fill:#261f12}.node.warn .st{fill:var(--warn)}
+.node.attacker rect{stroke:var(--atk-bd);fill:#1d1218}
+.edge{fill:none;stroke:var(--border2);stroke-width:3;transition:stroke .25s,opacity .25s}
+.edge.trail{stroke:var(--atk);opacity:.35}
+.edge.attack{stroke:var(--atk);stroke-dasharray:9 7;animation:flow .8s linear infinite}
+.edge.blocked{stroke:var(--def)}
+@keyframes flow{to{stroke-dashoffset:-16}}
+.zone{fill:none;stroke-width:1.5;stroke-dasharray:6 5;opacity:0;transition:opacity .25s}
+.vlan .zone{opacity:1}
+.zone.iot{stroke:var(--warn)}.zone.prv{stroke:var(--def)}
+.zlabel{font-size:13px;font-family:var(--mono);opacity:0;transition:opacity .25s}
+.vlan .zlabel{opacity:1}
+.cap{fill:var(--text3);font-size:13px;font-family:var(--mono)}
+.xmark{opacity:0;transition:opacity .2s}
+.xmark.on{opacity:1}
+
+/* Notes */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.card h4{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:var(--text2)}
+.card ul{padding-left:18px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+td code{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:12px}
+footer{border-top:1px solid var(--border);padding:22px 0 40px;color:var(--text3);font-size:13px}
+
+@media (max-width:820px){
+  .stage-grid{grid-template-columns:1fr}
+  .diagram{border-right:0;border-bottom:1px solid var(--border)}
+  .chain{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  .edge.attack{animation:none}
+  .log div.ln{animation:none;opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><a href="./">← Zerosec · News</a><span>Interaktiv laboratoriya</span></div>
+
+  <header class="hero">
+    <span class="badge">IoT · Lateral movement · Purple team</span>
+    <h1>Smart kameradan noutbukdagi hujjatlargacha: hujum zanjirini oʻzingiz uzib koʻring</h1>
+    <p>Uyda eski firmware'li Wi-Fi kamera, router va Windows noutbuk bor. Hujumchi kamerani internet orqali egallab, uydagi soliq hujjatlarigacha yetib borishga urinadi. Quyida himoya choralarini yoqing va zanjir qaysi bosqichda uzilishini kuzating.</p>
+    <p class="legal">Bu — modellashtirilgan simulyatsiya, hech qanday real tizimga ulanmaydi. IP manzillar hujjatlar uchun ajratilgan diapazonlardan olingan. Ekspluatatsiya tafsilotlari ataylab umumiy darajada berilgan.</p>
+  </header>
+
+  <section aria-labelledby="h-def">
+    <h2 id="h-def">1. Himoya choralari</h2>
+    <p class="sub">Har bir himoya zanjirning bitta boʻgʻinini uzadi. Avval hammasini oʻchirib hujumni oxirigacha oʻtkazing, keyin bittadan yoqib koʻring.</p>
+    <div class="presets" role="group" aria-label="Tayyor sozlamalar">
+      <button class="preset" data-preset="none">Himoyasiz uy</button>
+      <button class="preset" data-preset="vlan">Faqat VLAN</button>
+      <button class="preset" data-preset="detect">Faqat monitoring</button>
+      <button class="preset" data-preset="all">Qatlamli himoya</button>
+    </div>
+    <div class="defs" id="defs"></div>
+  </section>
+
+  <section aria-labelledby="h-lab" style="padding-top:4px">
+    <h2 id="h-lab">2. Hujum zanjiri</h2>
+    <p class="sub">“Keyingi bosqich” tugmasini bosing yoki ← → tugmalaridan foydalaning.</p>
+
+    <div class="lab">
+      <div class="lab-head">
+        <div class="t">Interactive Attack Chain<small>Modellashtirilgan laboratoriya · MITRE ATT&amp;CK bilan</small></div>
+        <div class="net" id="net"></div>
+      </div>
+      <div class="chain" id="chain"></div>
+      <div class="stage-grid">
+        <div class="diagram">
+          <svg id="svg" viewBox="0 0 760 440" role="img" aria-labelledby="svg-t">
+            <title id="svg-t">Tarmoq diagrammasi: hujumchi, router, kamera, noutbuk va hujjatlar</title>
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0L10 5L0 10z" fill="context-stroke"/>
+              </marker>
+            </defs>
+            <g id="zones">
+              <rect class="zone iot" x="14" y="234" width="232" height="198" rx="12"/>
+              <text class="zlabel" x="24" y="426" fill="#f2b447">IoT VLAN 30</text>
+              <rect class="zone prv" x="514" y="234" width="232" height="198" rx="12"/>
+              <text class="zlabel" x="524" y="250" fill="#4cce8d">Private VLAN 10</text>
+            </g>
+            <path id="e-wan" class="edge" d="M230 63H530"/>
+            <path id="e-rcam" class="edge" d="M598 102V186H178V262"/>
+            <path id="e-rlap" class="edge" d="M664 102V262"/>
+            <path id="e-lat" class="edge" d="M230 305H530"/>
+            <path id="e-docs" class="edge" d="M630 348V378"/>
+            <path id="e-c2" class="edge" d="M80 262V102"/>
+            <text class="cap" x="380" y="176" text-anchor="middle" id="cap-lan">Uy tarmogʻi</text>
+            <text class="cap" x="92" y="190">C2</text>
+            <text class="cap" x="380" y="52" text-anchor="middle">WAN</text>
+            <g id="xmark" class="xmark" transform="translate(380 305)">
+              <circle r="17" fill="#4cce8d"/>
+              <path d="M-6 -6L6 6M6 -6L-6 6" stroke="#0d1016" stroke-width="3.5" stroke-linecap="round"/>
+              <text y="-26" text-anchor="middle" fill="#4cce8d" font-size="13" font-weight="700" font-family="ui-monospace,monospace">FIREWALL DENY</text>
+            </g>
+            <g class="node attacker" id="n-atk" transform="translate(30 24)">
+              <rect width="200" height="78" rx="12"/>
+              <text class="ttl" x="100" y="31" text-anchor="middle">Hujumchi</text>
+              <text class="ip" x="100" y="56" text-anchor="middle">203.0.113.45</text>
+            </g>
+            <g class="node" id="n-rtr" transform="translate(530 24)">
+              <rect width="200" height="78" rx="12"/>
+              <text class="ttl" x="100" y="31" text-anchor="middle">Uy routeri</text>
+              <text class="st" x="100" y="56" text-anchor="middle">Firewall</text>
+            </g>
+            <g class="node" id="n-cam" transform="translate(30 262)">
+              <rect width="200" height="86" rx="12"/>
+              <text class="ttl" x="100" y="30" text-anchor="middle">◉ Kamera</text>
+              <text class="ip" x="100" y="52" text-anchor="middle">192.168.1.20</text>
+              <text class="st" x="100" y="74" text-anchor="middle">Online</text>
+            </g>
+            <g class="node" id="n-lap" transform="translate(530 262)">
+              <rect width="200" height="86" rx="12"/>
+              <text class="ttl" x="100" y="30" text-anchor="middle">▣ Noutbuk</text>
+              <text class="ip" x="100" y="52" text-anchor="middle">192.168.1.10</text>
+              <text class="st" x="100" y="74" text-anchor="middle">Himoyalanganmi?</text>
+            </g>
+            <g class="node" id="n-doc" transform="translate(550 378)">
+              <rect width="160" height="40" rx="9"/>
+              <text class="st" x="80" y="25" text-anchor="middle">Soliq hujjatlari</text>
+            </g>
+          </svg>
+        </div>
+        <div class="panel">
+          <div class="kicker" id="kicker"></div>
+          <h3 id="title"></h3>
+          <p class="desc" id="desc"></p>
+          <div class="tech" id="tech"></div>
+          <div class="log" aria-live="polite"><div class="h"><span>NETWORK SECURITY LOG</span><span id="logcount"></span></div><div id="log"></div></div>
+          <div class="verdict neu" id="verdict"></div>
+          <div class="blue" id="blue"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="prev">← Oldingi</button>
+        <button class="btn primary" id="next">Keyingi bosqich →</button>
+        <button class="btn" id="play">▶ Avtomatik</button>
+        <span class="sp"></span>
+        <span class="hint" id="hint"></span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-map">
+    <h2 id="h-map">3. Qaysi himoya qayerda ishlaydi</h2>
+    <p class="sub">Zanjir faqat birinchi uzilgan joyigacha boradi. Shuning uchun “Qatlamli himoya”da hujum 2-bosqichdayoq toʻxtaydi. Keyingi qatlamlar esa oldingisi ishlamay qolsa (masalan, 0-day yoki xato sozlama) zaxira boʻlib xizmat qiladi.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Himoya</th><th>Bosqich</th><th>Nimani toʻxtatadi</th><th>Nimani toʻxtatmaydi</th></tr></thead>
+      <tbody id="maptbl"></tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="h-ex">
+    <h2 id="h-ex">4. Amaliy mashqlar</h2>
+    <div class="cards">
+      <div class="card"><h4>Mashq 1 · VLAN yetarlimi?</h4><p>“Faqat VLAN”ni tanlang. Kamera baribir buzilganini va C2 ulanishi ishlayotganini koʻring. VLAN lateral movement'ni toʻsadi, lekin kamerani qutqarmaydi: u boshqa hujumlar uchun tayanch nuqta (botnet, proksi) boʻlib qolaveradi.</p></div>
+      <div class="card"><h4>Mashq 2 · Faqat monitoring</h4><p>Faqat IDS'ni yoqing. Hujum oxirigacha boradi, lekin har bosqichda signal paydo boʻladi. Aniqlash — bu toʻsish emas: kimdir signalga oʻz vaqtida javob berishi kerak.</p></div>
+      <div class="card"><h4>Mashq 3 · Eng arzon himoya</h4><p>Bittadan himoya yoqib, qaysi biri eng erta uzishini toping. Keyin oʻylab koʻring: real uyda qaysi birini sozlash eng oson va qaysi birini doim ushlab turish qiyin?</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-ioc">
+    <h2 id="h-ioc">5. Real pentest va SOC uchun dalillar</h2>
+    <div class="cards">
+      <div class="card"><h4>Tarmoqda</h4><ul>
+        <li>Kameradan avval koʻrilmagan tashqi manzilga doimiy ulanish</li>
+        <li>Kameradan ichki IP'larga koʻplab ulanishlar (skanerlash)</li>
+        <li>IoT segmentidan <code>TCP/445</code> ga urinishlar</li>
+        <li>Kameradan katta hajmdagi chiquvchi HTTPS trafik</li>
+      </ul></div>
+      <div class="card"><h4>Windows'da</h4><ul>
+        <li><code>4625</code> (muvaffaqiyatsiz kirish) seriyasi, keyin <code>4624</code></li>
+        <li><code>5140</code> / <code>5145</code>: tarmoq ulashmasiga murojaat</li>
+        <li>Manba IP — kamera yoki boshqa IoT qurilma</li>
+      </ul></div>
+      <div class="card"><h4>Routerda</h4><ul>
+        <li>UPnP orqali avtomatik ochilgan portlar roʻyxati</li>
+        <li>Tashqi IP'lardan nostandart portlarga urinishlar</li>
+        <li>IoT qurilmalarning qaysi domenlarga chiqayotgani</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <footer>Zerosec · <a href="./">News</a> · <a href="../">Bosh sahifa</a> — Bu sahifa taʼlimiy maqsadda. Usullarni faqat oʻzingizga tegishli yoki yozma ruxsat berilgan tizimlarda sinang.</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var DEFS = [
+    {id:'upnp', name:'UPnP oʻchirilgan, port ochilmagan', note:'Kamera interfeysi internetdan koʻrinmaydi', stage:2,
+      stops:'Internetdan kamerani topish va unga ulanish', not:'Ichki tarmoqdan (masalan, buzilgan telefon orqali) hujum'},
+    {id:'firmware', name:'Firmware yangilangan', note:'Maʼlum zaiflik yopilgan', stage:3,
+      stops:'Maʼlum zaiflik orqali kod bajarish', not:'0-day, zaif parol, ochiq qolgan interfeys'},
+    {id:'egress', name:'IoT chiquvchi trafigi cheklangan', note:'Kamera faqat ishlab chiqaruvchi bulutiga chiqadi', stage:3,
+      stops:'Teskari ulanish (C2) va maʼlumotni tashqariga yuborish', not:'Kameraning oʻzi buzilishini'},
+    {id:'vlan', name:'IoT alohida VLAN + firewall', note:'IoT → Private trafigi rad etiladi', stage:4,
+      stops:'Kameradan noutbukka lateral movement', not:'Kamera buzilishi va C2; notoʻgʻri firewall qoidasi boʻlsa — hech narsa'},
+    {id:'smb', name:'SMB qattiqlashtirilgan', note:'Kuchli unikal parol, guest va SMBv1 oʻchiq', stage:5,
+      stops:'Ulashilgan papkaga parol taxmin qilib kirish', not:'Oʻgʻirlangan haqiqiy parol bilan kirish'},
+    {id:'ids', name:'Monitoring / IDS', note:'Toʻsmaydi — faqat aniqlaydi va ogohlantiradi', stage:0,
+      stops:'Hech narsani (faqat signal beradi)', not:'Hujumni — javob choralari kerak'}
+  ];
+
+  var PRESETS = {
+    none:{}, vlan:{vlan:1}, detect:{ids:1},
+    all:{upnp:1, firmware:1, egress:1, vlan:1, smb:1, ids:1}
+  };
+
+  var on = {};
+
+  function ips(){
+    return on.vlan ? {cam:'192.168.30.20', lap:'192.168.10.10', net:'IoT: 192.168.30.0/24 · Private: 192.168.10.0/24'}
+                   : {cam:'192.168.1.20', lap:'192.168.1.10', net:'Umumiy LAN: 192.168.1.0/24'};
+  }
+
+  // Each stage: how it plays out given the active defenses.
+  // run() returns {ok, by, title, desc, log[], verdict, blue}
+  var STAGES = [
+    {short:'Tayyorgarlik', phase:'Preparation', tech:[],
+      run:function(ip){ return {ok:true,
+        title:'Tarmoqning boshlangʻich holati',
+        desc:'Uyda Wi-Fi kamera, router va Windows noutbuk bor. Noutbukda “Hujjatlar” papkasi SMB orqali ulashilgan. Hujumchi hali hech bir qurilmani boshqarmaydi.',
+        log:[['n','router: 3 ta qurilma ulangan'],['n','camera '+ip.cam+'  online  fw 1.0.4 (2022)'],['n','laptop '+ip.lap+'  online  share \\\\LAPTOP\\Hujjatlar']],
+        verdict:['neu','ℹ','Hujum hali boshlanmagan','Bu bosqich hech narsa buzilganini bildirmaydi.'],
+        blue:'<b>Himoyachi uchun:</b> hammasi aktivlar roʻyxatidan boshlanadi — qaysi qurilma bor, qanday firmware turibdi, nimalar ulashilgan.'}; }},
+    {short:'Razvedka', phase:'Reconnaissance', tech:['TA0043','T1595 Active Scanning'],
+      run:function(ip){
+        if(on.upnp) return {ok:false, by:'upnp',
+          title:'Internetdan kamerani topishga urinish',
+          desc:'UPnP oʻchirilgan va hech qanday port ochilmagan. Kamera interfeysi faqat ichki tarmoqdan ochiladi, internetdan skaner hech narsa topmaydi.',
+          log:[['a','WAN 203.0.113.45 → router:8080  SYN'],['d','router: DROP — ochiq port yoʻq'],['d','tashqi skaner: natija yoʻq']]};
+        return {ok:true,
+          title:'Internetdan kamerani aniqlash',
+          desc:'Router UPnP orqali kameraning veb-interfeysini avtomatik ravishda tashqi 8080-portga ochib qoʻygan. Hujumchi ommaviy skanerlashda shu interfeysni topadi va banner orqali model hamda firmware versiyasini aniqlaydi.',
+          log:[['a','WAN 203.0.113.45 → router:8080  SYN'],['w','router → camera '+ip.cam+':80  (UPnP mapping)'],['a','HTTP 200  banner: "IPCam fw 1.0.4"']],
+          blue:'<b>Aniqlash:</b> router logida tashqi IP\'lardan nostandart portlarga urinishlar. Routerdagi UPnP mapping roʻyxatini muntazam tekshiring.'}; }},
+    {short:'Dastlabki kirish', phase:'Initial Access / Execution', tech:['TA0001','T1190 Exploit Public-Facing App'],
+      run:function(ip){
+        if(on.firmware) return {ok:false, by:'firmware',
+          title:'Kamerani egallashga urinish',
+          desc:'Firmware yangilangan, maʼlum zaiflik yopilgan. Interfeys ochiq boʻlsa ham ekspluatatsiya ishlamaydi. Lekin internetga ochiq interfeys baribir xavf boʻlib qoladi: zaif parol yoki 0-day kabi.',
+          log:[['a','POST /cgi-bin/... → camera  (gʻayrioddiy parametr)'],['d','camera: HTTP 400 — soʻrov rad etildi (fw 2.3.1)']]};
+        if(on.egress) return {ok:false, by:'egress', partial:true,
+          title:'Kod bajarildi, lekin C2 ulanmadi',
+          desc:'Eski firmware\'dagi zaiflik orqali kamerada kod ishga tushdi. Ammo routerda IoT qurilmalar faqat ishlab chiqaruvchi bulutiga chiqa oladi. Hujumchining serveriga teskari ulanish bloklandi va u kamerani boshqara olmaydi.',
+          log:[['a','POST /cgi-bin/... → camera  (gʻayrioddiy parametr)'],['a','camera: kutilmagan jarayon ishga tushdi'],['a','camera '+ip.cam+' → 198.51.100.7:443'],['d','router: DENY egress IoT → nomaʼlum manzil']]};
+        return {ok:true,
+          title:'Smart kamerani egallash',
+          desc:'Eski firmware\'da autentifikatsiyasiz buyruq bajarish (command injection) zaifligi bor. Hujumchi kamerada oʻz kodini ishga tushiradi va tashqi serverga teskari ulanish (C2) oʻrnatadi. Kamera endi hujumchining ichkaridagi “koʻzi”.',
+          log:[['a','POST /cgi-bin/... → camera  (gʻayrioddiy parametr)'],['a','camera: kutilmagan jarayon ishga tushdi'],['a','camera '+ip.cam+' → 198.51.100.7:443  ESTABLISHED']],
+          blue:'<b>Aniqlash:</b> kameradan avval koʻrilmagan tashqi manzilga doimiy ulanish — eng kuchli signal.'}; }},
+    {short:'Ichki razvedka', phase:'Discovery', tech:['TA0007','T1046 Network Service Discovery'],
+      run:function(ip){
+        if(on.vlan) return {ok:false, by:'vlan',
+          title:'Ichki tarmoqni skanerlashga urinish',
+          desc:'Kamera IoT VLAN\'da, noutbuk esa alohida Private VLAN\'da. Router firewall\'i IoT → Private yoʻnalishidagi barcha trafikni rad etadi. Kamera buzilgan boʻlsa ham noutbukni koʻra olmaydi.',
+          log:[['a','camera '+ip.cam+' → 192.168.10.0/24  sweep'],['d','firewall: DENY IoT → Private  (rule 10)'],['d','nishon topilmadi']]};
+        return {ok:true,
+          title:'Ichki tarmoqni tekshirish',
+          desc:'Buzilgan kamera mahalliy tarmoqni skanerlaydi va '+ip.lap+' manzilda TCP/445 (SMB) ochiq ekanini topadi. Hammasi bitta tarmoqda boʻlgani uchun buni hech narsa toʻxtatmaydi.',
+          log:[['a','camera → 192.168.1.0/24  ARP / ping sweep'],['a','camera → '+ip.lap+':445  SYN-ACK'],['w','SMB xizmati topildi: LAPTOP']],
+          blue:'<b>Aniqlash:</b> kameradan ichki IP\'larga koʻplab ulanishlar. Kamera hech qachon tarmoqni skanerlamasligi kerak.'}; }},
+    {short:'Lateral harakat', phase:'Lateral Movement', tech:['TA0008','T1021.002 SMB Shares','T1110 Brute Force'],
+      run:function(ip){
+        if(on.smb) return {ok:false, by:'smb',
+          title:'Ulashilgan papkaga kirishga urinish',
+          desc:'Ulashish faqat aniq foydalanuvchiga, kuchli unikal parol bilan berilgan. Guest kirish va SMBv1 oʻchirilgan. Parolni taxmin qilish urinishlari natija bermaydi.',
+          log:[['a','SMB auth  user=admin   FAILED ×50'],['a','SMB auth  user=guest   DENIED'],['d','\\\\LAPTOP\\Hujjatlar: ACCESS DENIED']]};
+        return {ok:true,
+          title:'Noutbukdagi fayllarga kirish',
+          desc:'Ulashilgan papka zaif (yoki boshqa joyda ishlatilgan) parol bilan himoyalangan. Hujumchi bir necha urinishdan soʻng kiradi va soliq hujjatlarini oʻqiy oladi. Bu noutbuk toʻliq egallandi degani emas — faqat ulashilgan papka ochildi.',
+          log:[['a','SMB auth  user=admin   FAILED ×7'],['a','SMB auth  user=user    SUCCESS'],['w','\\\\LAPTOP\\Hujjatlar: read']],
+          blue:'<b>Aniqlash:</b> Windows Event ID 4625 seriyasi, keyin 4624, barchasi bitta manbadan — va bu manba kamera.'}; }},
+    {short:'Eksfiltratsiya', phase:'Collection / Exfiltration', tech:['TA0010','T1039 Network Shared Drive','T1041 Exfil over C2'],
+      run:function(ip){ return {ok:true,
+        title:'Maʼlumotlarni tashqariga uzatish',
+        desc:'Hujumchi hujjatlarni kameraga koʻchiradi va mavjud C2 kanali orqali HTTPS bilan tashqariga yuboradi. Router faqat kiruvchi trafikni cheklaydi, chiquvchisini emas. Shuning uchun bu trafik bloklanmaydi.',
+        log:[['a','\\\\LAPTOP\\Hujjatlar → camera  (14 fayl, 38 MB)'],['a','camera → 198.51.100.7:443  upload'],['a','sensitive data: transferred']],
+        blue:'<b>Aniqlash:</b> kameradan katta hajmdagi chiquvchi trafik. Bu bosqichda aniqlash juda kech — maʼlumot allaqachon chiqib ketgan.'}; }}
+  ];
+
+  // IDS adds alert lines to stages it can see.
+  var IDS = {
+    1:'IDS: tashqi skaner urinishlari — past ustuvorlik',
+    2:'IDS ALERT: kamera → yangi tashqi manzil (C2 ehtimoli)',
+    3:'IDS ALERT: kamera ichki tarmoqni skanerlamoqda',
+    4:'IDS ALERT: 4625 seriyasi, manba — kamera',
+    5:'IDS ALERT: kameradan anomal chiquvchi hajm'
+  };
+
+  var EDGES = {
+    0:[],
+    1:['wan','rcam'],
+    2:['wan','rcam','c2'],
+    3:['lat'],
+    4:['lat','docs'],
+    5:['docs','lat','c2']
+  };
+  var BLOCK_EDGE = {upnp:'wan', firmware:'rcam', egress:'c2', vlan:'lat', smb:'lat'};
+
+  var step = 0, sim = [], playT = null;
+
+  function simulate(){
+    var ip = ips(), out = [], stopped = false;
+    for(var i=0;i<STAGES.length;i++){
+      if(stopped){ out.push(null); continue; }
+      var r = STAGES[i].run(ip);
+      out.push(r);
+      if(!r.ok) stopped = true;
+    }
+    return out;
+  }
+  function lastIdx(){ for(var i=0;i<sim.length;i++){ if(sim[i] && !sim[i].ok) return i; } return sim.length-1; }
+  function defById(id){ for(var i=0;i<DEFS.length;i++) if(DEFS[i].id===id) return DEFS[i]; }
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function renderDefs(){
+    $('defs').innerHTML = DEFS.map(function(d){
+      return '<button class="def" data-id="'+d.id+'" aria-pressed="'+(on[d.id]?'true':'false')+'"><span class="sw"></span><span><b>'+esc(d.name)+'</b><small>'+esc(d.note)+'</small><span class="stg">'+(d.stage?('→ '+d.stage+'-bosqich'):'→ aniqlash')+'</span></span></button>';
+    }).join('');
+    $('maptbl').innerHTML = DEFS.map(function(d){
+      return '<tr><td><b>'+esc(d.name)+'</b></td><td><code>'+(d.stage?d.stage+' · '+STAGES[d.stage-1].phase:'har bosqich')+'</code></td><td>'+esc(d.stops)+'</td><td>'+esc(d.not)+'</td></tr>';
+    }).join('');
+  }
+
+  function setNode(id, cls, status, ip){
+    var g = $(id);
+    g.setAttribute('class','node'+(id==='n-atk'?' attacker':'')+(cls?' '+cls:''));
+    if(status!=null) g.querySelector('.st').textContent = status;
+    if(ip!=null){ var t=g.querySelector('.ip'); if(t) t.textContent = ip; }
+  }
+
+  function render(){
+    var ip = ips(), last = lastIdx(), r = sim[step], s = STAGES[step];
+    var blockedAt = (sim[last] && !sim[last].ok) ? last : -1;
+
+    $('net').textContent = ip.net;
+    $('svg').classList.toggle('vlan', !!on.vlan);
+    $('cap-lan').textContent = on.vlan ? 'Router: VLAN\'lar orasida firewall' : 'Uy tarmogʻi';
+
+    // chain pills
+    $('chain').innerHTML = STAGES.map(function(st,i){
+      var res = sim[i], cls = 'pill', ic = '·';
+      if(!res){ cls += ' skip'; ic = '–'; }
+      else if(i<=step){ if(res.ok){ cls+=' ok'; ic = i===0?'●':'✓'; } else { cls+=' blocked'; ic='✕'; } }
+      if(i===step) cls += ' cur';
+      return '<button class="'+cls+'" data-step="'+i+'"'+(res?'':' disabled')+' aria-label="'+(i+1)+'-bosqich: '+esc(st.short)+'"><span class="n"><span>'+(i+1)+'</span><i>'+ic+'</i></span><span class="l">'+esc(st.short)+'</span></button>';
+    }).join('');
+
+    // panel
+    $('kicker').textContent = 'BOSQICH '+(step+1)+' / 6 — '+s.phase;
+    $('title').textContent = r.title;
+    $('desc').textContent = r.desc;
+    $('tech').innerHTML = s.tech.map(function(t){return '<span class="tag">'+esc(t)+'</span>';}).join('');
+
+    var lines = r.log.slice();
+    if(on.ids && IDS[step] && step>0) lines.push(['w', IDS[step]]);
+    $('log').innerHTML = lines.map(function(l,i){
+      return '<div class="ln '+l[0]+'" style="animation-delay:'+(i*0.14)+'s">'+esc(l[1])+'</div>';
+    }).join('');
+    $('logcount').textContent = lines.length+' yozuv';
+
+    // verdict
+    var v, alerts = 0;
+    if(on.ids){ for(var k=1;k<=step;k++){ if(sim[k] && IDS[k]) alerts++; } }
+    if(r.verdict){ v = r.verdict; }
+    else if(!r.ok){
+      var d = defById(r.by);
+      v = ['def','🛡','Zanjir shu yerda uzildi','Toʻxtatgan himoya: '+d.name+'.'+(r.partial?' Kamera buzilgan, lekin hujumchi uni boshqara olmaydi.':'')];
+    } else if(step===5){
+      v = ['atk','⚠','Maʼlumotlar sizib chiqdi', on.ids ? ('Monitoring '+alerts+' ta signal berdi, lekin hech narsa toʻsmadi. Signalga javob kerak edi.') : 'Hech bir himoya bu zanjirni uzmadi va hech kim buni sezmadi.'];
+    } else {
+      v = ['atk','●', step>=2 ? 'Kamera buzilgan — xavf davom etmoqda' : 'Hujum davom etmoqda', step>=2 ? 'Hujumchi ichki tarmoqdagi ruxsat etilgan yoʻllarni oʻrganishi mumkin.' : 'Hujumchi hali ichkariga kirmagan.'];
+    }
+    var vb = $('verdict');
+    vb.className = 'verdict '+v[0];
+    vb.innerHTML = '<span class="ic">'+v[1]+'</span><span><b>'+esc(v[2])+'</b>'+esc(v[3])+'</span>';
+    $('blue').innerHTML = r.blue || (r.ok ? '' : '<b>Saboq:</b> bu himoya toʻxtatdi — '+esc(defById(r.by).stops).toLowerCase()+'. <b>Toʻsmaydi:</b> '+esc(defById(r.by).not)+'.');
+    $('blue').style.display = $('blue').innerHTML ? '' : 'none';
+
+    drawDiagram(ip);
+
+    // controls
+    $('prev').disabled = step===0;
+    var end = step>=last;
+    $('next').textContent = end ? '↺ Qayta boshlash' : 'Keyingi bosqich →';
+    $('play').textContent = playT ? '❚❚ Pauza' : '▶ Avtomatik';
+    $('hint').textContent = blockedAt>=0 ? ('Bu sozlamada zanjir '+(blockedAt+1)+'-bosqichda uziladi') : 'Bu sozlamada zanjir uzilmaydi';
+  }
+
+  function drawDiagram(ip){
+    var ids = ['wan','rcam','rlap','lat','docs','c2'];
+    var state = {}; ids.forEach(function(e){ state[e]=''; });
+    for(var i=1;i<step;i++){ if(sim[i] && sim[i].ok) EDGES[i].forEach(function(e){ state[e]='trail'; }); }
+    var r = sim[step];
+    if(r.ok){ EDGES[step].forEach(function(e){ state[e]='attack'; }); }
+    else {
+      EDGES[step].forEach(function(e){ state[e]='attack'; });
+      state[BLOCK_EDGE[r.by]] = 'blocked';
+    }
+    ids.forEach(function(e){ $('e-'+e).setAttribute('class','edge'+(state[e]?' '+state[e]:'')); });
+    $('xmark').classList.toggle('on', !r.ok && r.by==='vlan');
+
+    // nodes
+    var cam = ['',null], lap = ['','Himoyalanganmi?'], doc = ['','Soliq hujjatlari'], rtr = ['','Firewall'];
+    cam[1] = 'Online';
+    if(sim[1] && !sim[1].ok && step>=1) rtr = ['def','Port yopiq'];
+    if(step>=1 && sim[1] && sim[1].ok) cam = ['warn','Internetga ochiq'];
+    if(step>=2 && sim[2]){
+      if(sim[2].ok) cam = ['atk','Buzilgan'];
+      else if(sim[2].by==='firmware') cam = ['def','Yamoqlangan'];
+      else cam = ['warn','Buzilgan · C2 yoʻq'];
+    }
+    if(step>=3 && sim[3]){ lap = sim[3].ok ? ['warn','SMB topildi'] : ['def','Koʻrinmaydi']; }
+    if(step>=4 && sim[4]){ if(sim[4].ok){ lap = ['atk','Papka ochildi']; doc = ['warn','Oʻqilmoqda']; } else lap = ['def','Kirish rad etildi']; }
+    if(step>=5 && sim[5] && sim[5].ok) doc = ['atk','Sizib chiqdi'];
+    setNode('n-rtr', rtr[0], rtr[1]);
+    setNode('n-cam', cam[0], cam[1], ip.cam);
+    setNode('n-lap', lap[0], lap[1], ip.lap);
+    setNode('n-doc', doc[0], doc[1]);
+  }
+
+  function go(n){
+    var last = lastIdx();
+    step = Math.max(0, Math.min(n, last));
+    render();
+  }
+  function next(){
+    if(step>=lastIdx()){ stopPlay(); go(0); return; }
+    go(step+1);
+  }
+  function stopPlay(){ if(playT){ clearInterval(playT); playT=null; } }
+  function togglePlay(){
+    if(playT){ stopPlay(); render(); return; }
+    if(step>=lastIdx()) step = 0;
+    playT = setInterval(function(){
+      if(step>=lastIdx()){ stopPlay(); render(); return; }
+      go(step+1);
+    }, 2400);
+    render();
+  }
+  function recompute(){
+    sim = simulate();
+    if(step>lastIdx()) step = lastIdx();
+    renderDefs();
+    render();
+  }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    if(b.classList.contains('def')){ var id=b.getAttribute('data-id'); on[id] = !on[id]; recompute(); return; }
+    if(b.classList.contains('preset')){ on = Object.assign({}, PRESETS[b.getAttribute('data-preset')]); step = 0; stopPlay(); recompute(); return; }
+    if(b.classList.contains('pill')){ stopPlay(); go(+b.getAttribute('data-step')); return; }
+    if(b.id==='next'){ stopPlay(); next(); }
+    else if(b.id==='prev'){ stopPlay(); go(step-1); }
+    else if(b.id==='play'){ togglePlay(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.target.closest && e.target.closest('input,textarea')) return;
+    if(e.key==='ArrowRight'){ stopPlay(); if(step<lastIdx()) go(step+1); }
+    else if(e.key==='ArrowLeft'){ stopPlay(); go(step-1); }
+  });
+
+  recompute();
+})();
+</script>
+</body>
+</html>
