@@ -73,61 +73,6 @@ Penelope interaktiv shell'dan uni o'ldirmasdan chekinishga imkon beradi. **Ctrl-
 [ Sessiyani ajratish uchun Ctrl-D bosing ]
 ```
 
-## Interaktiv shell bilan ishlash
-
-Penelope'ning oddiy netcat'dan asosiy farqi shundaki, u ushlagan xom (raw) shell'ni avtomatik ravishda to'liq interaktiv shell'ga aylantiradi. Xom netcat shell'da `Ctrl-C` butun ulanishni uzadi, Tab va strelka tugmalari ishlamaydi, `sudo`, `ssh`, `vim` yoki `top` kabi to'liq terminal talab qiladigan dasturlar esa xato beradi. Penelope bu muammoni Unix nishonida PTY'ni, Windows nishonida readline'ni avtomatik yoqib hal qiladi.
-
-### Interaktiv shell nima beradi
-
-| Xususiyat | Unix nishoni | Windows nishoni |
-| --- | --- | --- |
-| Avtomatik shell yangilash | to'liq PTY | readline (`upgrade` bilan PTY'ga ham ko'tariladi) |
-| Terminal o'lchamini real vaqtda moslash | ✅ | ❌ |
-| Tab-completion, strelka tugmalari, buyruq tarixi | ✅ | ✅ |
-| Har bir interaksiyani diskka log qilish | ✅ | ✅ |
-| `sudo`, `ssh`, `vim`, `top` kabi to'liq terminalli dasturlar | ishlaydi | cheklangan |
-
-PTY yangilash uchun Penelope odatda nishondagi `python3` dan (u bo'lmasa `script` buyrug'idan) foydalanadi. Agar avtomatik yangilash amalga oshmasa, menyudan qo'lda `upgrade` buyrug'ini berish mumkin; yangilashni butunlay o'chirish uchun esa ishga tushirishda `-U` bayrog'i ishlatiladi.
-
-### Qanday ulaniladi va ajratiladi
-
-Yangi sessiya kelganda Penelope sizni unga avtomatik ulaydi (buni `-C` bilan o'chirish mumkin) va shell qaysi tugma bilan ajratilishini (detach) ekranda ko'rsatadi. Ajratish tugmasi shell turiga bog'liq:
-
-- **PTY** sessiya — `F12`
-- **readline** sessiya — `Ctrl-D` (EOF)
-- **xom (raw)** sessiya — `Ctrl-C` (SIGINT)
-
-Ajratgandan so'ng nishondagi shell tirik qoladi va siz menyuga qaytasiz. Sessiyaga qayta ulanish yoki boshqasiga o'tish uchun quyidagi buyruqlar ishlatiladi (menyu qisqa shakllarni ham qabul qiladi, masalan `interact 1` o'rniga `i 1`):
-
-```bash
-sessions          # barcha faol sessiyalarni ro'yxatlash
-interact 1        # 1-sessiyaga ulanish
-use 1             # 1-sessiyani ulanmasdan faol qilish (modullar uchun)
-```
-
-### Qanday natija chiqadi
-
-Quyida tipik oqim keltirilgan: sessiya keladi, PTY'ga yangilanadi, biz bir-ikki buyruq beramiz, so'ng `F12` bilan ajratamiz. Status qatorlari taxminiy — aniq matn, manzil va sessiya ID'lari laboratoriyangizga qarab o'zgaradi.
-
-```text
-[+] 192.168.1.11 dan reverse shell ushlandi — SessionID <1> biriktirildi
-[+] PTY shell ochilmoqda...
-[+] Shell muvaffaqiyatli yangilandi (PTY)
-[+] Log: ~/.penelope/sessions/ignite~192.168.1.11-Linux-x86_64/log.txt
-[+] Session <1> ga ulanilmoqda... (ajratish uchun F12)
-
-pentest@ignite:~$ id
-uid=1000(pentest) gid=1000(pentest) groups=1000(pentest)
-pentest@ignite:~$ hostname
-ignite
-pentest@ignite:~$        # <-- F12 bosildi
-[*] Session <1> ajratildi
-
-[Session 1] >            # menyuga qaytdik; buyruq va modullar shu sessiyaga ishlaydi
-```
-
-Diqqat qiling: xom shell'da to'g'ridan-to'g'ri `Ctrl-C` ulanishni uzib yuborishi mumkin bo'lgani uchun Penelope ataylab boshqa ajratish tugmalaridan (`F12` / `Ctrl-D`) foydalanadi — bu sessiyani tasodifan "o'ldirib qo'yish"dan saqlaydi. Har bir interaksiya yuqorida ko'rsatilgan `log.txt` ga yoziladi; bu log'lar credential va token kabi maxfiy ma'lumotlarni o'z ichiga olishi mumkin, shuning uchun ularni xavfsiz saqlang (yoki log kerak bo'lmasa `-L` / `--no-log` bilan o'chiring).
-
 ## Mavjud modullar ro'yxati
 
 Menyudan `modules` buyrug'i Penelope'ning post-exploitation arsenalini ochib beradi va u maqsadi bo'yicha ozoda guruhlangan: **Privilege Escalation** (winPEAS, LinPEAS, PowerUp, PrivescCheck, potato ekspluatatsiyalari va boshqalar), **Credential Dumping** (Mimikatz, LaZagne, Snaffler, SharpWeb), **Active Directory** (PowerView, SharpHound, GhostPack), **Forensics**, **Pivoting** (Ligolo-ng, Chisel, ngrok), **Persistence** (PANIX) va Meterpreter ishga tushirgichi hamda cleanup rutinasi kabi yordamchi vositalar. Har bir modul eng yangi relizni yuklab olish va uni nishonga joylashni avtomatlashtiradi.
